@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<style type="text/css">
+		html{
+			width: 100%;
+			height: 100%;
+		}
+		body {
+			width: 100%;
+			height: 100%;
+			background: #D4E8EA;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		#box {
+			width: 600px;
+			height: 800px;
+			border: 5px solid #EDE5AA;
+			background-color: #E2B5C0;
+			border-radius: 20%;
+			display: flex;
+			align-items: center;
+			justify-content: space-evenly;
+			flex-direction: column;
+		}
+		.text{
+			font-size: 20px;
+			color: white;
+			font-weight: 800;
+			font-family: Verdana;
+		}
+		button{
+			width: 100px;
+			height: 50px;
+			border-radius: 10%;
+			background-color: orange;
+			border: 1px solid #EDE5AA;
+			box-shadow: 5px 8px 5px #888888;
+		}
+			
+			
+	</style>
+	<body>
+		<div id="box">
+			<div>
+				<h1 id="food" class="text" style="font-size: 80px;"></h1>
+			</div>
+			<div>
+				<button class="text" type="button" onclick="restart()">开始</button>
+				<button class="text" type="button" onclick="stop()">停</button>
+			</div>
+		</div>
+	</body>
+	
+	<script type="text/javascript">
+		let foods = ['章鱼小丸子','紫菜','奥尔良烤翅','黑森林','布朗尼','提拉米苏','牛排',
+		'奶昔','奶茶','双皮奶','手抓饼','寿司','炒面','三文治','鸡翅',
+		'意大利面','烧烤','鳗鱼饭三吃','拉面','熟寿司','荞麦面','馄饨' ,'冒菜','串串香',
+                                 '拉面' ,'烩面' ,'热干面' ,'刀削面' ,'油泼面' ,'炸酱面' ,'炒面' ,'重庆小面' ,'米线' ,'酸辣粉' ,'土豆粉' ,'螺狮粉' ,
+                                 '凉皮儿' ,'麻辣烫' ,'肉夹馍' ,'羊肉汤' ,'炒饭' ,'盖浇饭' ,'卤肉饭' ,'冒菜','烤肉饭' ,'黄焖鸡米饭' ,'驴肉火烧' ,'川菜' ,
+                                   '麻辣香锅' ,'火锅' ,'酸菜鱼' ,'烤串' ,'披萨' ,'烤鸭' ,'汉堡' ,'炸鸡' ,'寿司' ,'蟹黄包' ,'煎饼果子' ,'生煎' ,'炒年糕','串串香',
+                                  "椰子鸡","牛肉饭","汤饭","大碗饭", "饺子","糖醋排骨","红烧肉"]
+		let index = 0;
+		let maxSize = foods.length;
+		
+		//随机food
+		function cycle() {
+			if(index == maxSize) {
+				index = 0
+			}
+			document.getElementById('food').innerHTML = foods[random(0,foods.length-1)]
+			;
+		}
+		
+		//默认开始
+		//var interval = setInterval(cycle, 100);
+
+		//开始
+		function restart(){
+			interval = setInterval(cycle, 100);
+		}
+
+		//停止
+		function stop(){
+			clearInterval(interval);
+		}
+
+		  function random(a,b){
+       			 return Math.round(Math.random()*(a-b)+b);
+    }
+
+
+	</script>
+</html>
