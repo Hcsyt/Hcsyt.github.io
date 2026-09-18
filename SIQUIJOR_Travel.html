@@ -1,10 +1,12 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
+
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Siquijor · 10.3—10.5 · </title>
-<meta name="theme-color" content="#f5f7f4">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Siquijor · 10.3—10.5 · 极简旅行 Dashboard · Baby Blue</title>
+<meta content="#f5f7f4" name="theme-color"/>
 <style>
 :root{
   --bg:#f5f9ff;
@@ -35,12 +37,7 @@
 html{scroll-behavior:smooth}
 body{
   margin:0;
-  background:
-    radial-gradient(circle at 7% 4%, rgba(174,216,248,.36) 0, rgba(174,216,248,0) 25%),
-    radial-gradient(circle at 92% 12%, rgba(248,208,193,.30) 0, rgba(248,208,193,0) 22%),
-    radial-gradient(circle at 78% 78%, rgba(220,214,246,.24) 0, rgba(220,214,246,0) 24%),
-    radial-gradient(circle at 18% 91%, rgba(248,229,171,.22) 0, rgba(248,229,171,0) 22%),
-    linear-gradient(180deg,#f7fbff 0%,#f4f8fc 38%,#f8f7f7 68%,#f7fbff 100%);
+  background:linear-gradient(180deg,#050608 0%,#0a1528 34%,#17385c 62%,#dce8f2 100%);
   color:var(--ink);
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Microsoft YaHei",sans-serif;
   line-height:1.65;
@@ -350,699 +347,870 @@ body.night .day-map{background:#111a26}
     radial-gradient(circle at 84% 78%, rgba(174,216,248,.12), transparent 24%);
 }
 
+
+/* Interactive itinerary */
+.timeline-item{
+  position:relative;
+  transition:opacity .25s ease, background .25s ease, transform .2s ease;
+  border-radius:12px;
+  padding-left:8px;
+  padding-right:8px;
+}
+.timeline-item:hover{
+  background:rgba(132,182,232,.055);
+}
+.timeline-item.is-done{
+  opacity:.42;
+}
+.timeline-item.is-done h3{
+  text-decoration:line-through;
+  text-decoration-thickness:1px;
+}
+.event-top{
+  display:flex;
+  align-items:flex-start;
+  gap:9px;
+}
+.event-title{
+  flex:1;
+  min-width:0;
+}
+.event-title h3{
+  margin:0;
+}
+.checkin-btn{
+  flex:none;
+  border:1px solid #d8e6f4;
+  background:#fff;
+  color:#6a7e96;
+  border-radius:999px;
+  min-height:31px;
+  padding:5px 10px;
+  font-size:11px;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:all .2s ease;
+}
+.checkin-btn:hover{
+  border-color:#8dbbe9;
+  color:#5b85ae;
+  background:#f5faff;
+}
+.timeline-item.is-done .checkin-btn{
+  background:#eaf5ff;
+  border-color:#b9d7f2;
+  color:#5d91c2;
+  font-weight:750;
+}
+.place-title-link{
+  cursor:pointer;
+}
+.info-trigger{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:20px;
+  height:20px;
+  margin-left:6px;
+  border:1px solid #d9e7f4;
+  border-radius:50%;
+  color:#6f9dca;
+  background:#f3f9ff;
+  font-size:11px;
+  vertical-align:middle;
+  cursor:pointer;
+  text-decoration:none;
+}
+.info-trigger:hover{
+  background:#e6f3ff;
+  border-color:#afd0ed;
+}
+.day-title strong .done-count{
+  color:#7ba7d2;
+  font-weight:800;
+  margin-left:6px;
+}
+.day-title small .done-hint{
+  color:#8499ad;
+}
+
+/* Modal */
+.place-modal{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  padding:20px;
+  background:rgba(25,42,61,.38);
+  backdrop-filter:blur(5px);
+}
+.place-modal.is-open{display:flex;}
+.place-modal-panel{
+  width:min(680px,100%);
+  max-height:min(78vh,720px);
+  overflow:auto;
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:22px;
+  box-shadow:0 22px 60px rgba(39,67,95,.22);
+  animation:modalIn .22s ease-out;
+}
+@keyframes modalIn{
+  from{transform:translateY(18px);opacity:0}
+  to{transform:translateY(0);opacity:1}
+}
+.modal-head{
+  position:sticky;
+  top:0;
+  z-index:2;
+  padding:16px 18px 12px;
+  background:var(--paper);
+  border-bottom:1px solid var(--line);
+}
+.modal-location-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+.modal-place-link{
+  font-size:21px;
+  font-weight:820;
+  letter-spacing:-.02em;
+  text-decoration:underline;
+  text-decoration-style:dashed;
+  text-decoration-color:rgba(111,159,209,.45);
+  text-underline-offset:4px;
+}
+.modal-close{
+  width:34px;height:34px;
+  border:1px solid var(--line);
+  border-radius:50%;
+  background:var(--paper);
+  color:var(--muted);
+  cursor:pointer;
+  font-size:20px;
+  line-height:1;
+}
+.modal-sub{
+  margin-top:4px;
+  font-size:11px;
+  color:var(--muted);
+}
+.modal-body{
+  padding:18px;
+}
+.modal-reason{
+  padding:12px 13px;
+  background:linear-gradient(135deg,#eef7ff,#fff7eb);
+  border:1px solid #e0e9f2;
+  border-radius:14px;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:14px;
+}
+.modal-sections{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.modal-section{
+  padding:13px;
+  background:var(--soft);
+  border:1px solid var(--line);
+  border-radius:14px;
+}
+.modal-section h4{
+  margin:0 0 6px;
+  font-size:12px;
+  font-weight:820;
+}
+.modal-section p{
+  margin:0;
+  font-size:12px;
+  color:var(--muted);
+}
+.modal-map{
+  margin-top:14px;
+  display:flex;
+  justify-content:center;
+}
+.modal-map a{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:9px 13px;
+  border-radius:999px;
+  background:#eaf5ff;
+  border:1px solid #c9e0f5;
+  color:#5c86af;
+  font-size:12px;
+  font-weight:760;
+}
+@media(max-width:650px){
+  .modal-sections{grid-template-columns:1fr}
+  .place-modal{padding:10px}
+  .place-modal-panel{max-height:84vh;border-radius:20px}
+  .event-top{align-items:flex-start}
+  .checkin-btn{padding:5px 8px;font-size:10px}
+}
+
+
+/* ---- Final interaction layer ---- */
+.event-top{display:flex;align-items:flex-start;gap:10px}
+.event-top h3{flex:1;min-width:0}
+.checkin-btn{
+  flex:none;
+  border:1px solid #d8e6f4;
+  background:#fff;
+  color:#6a7e96;
+  border-radius:999px;
+  min-height:31px;
+  padding:5px 10px;
+  font-size:11px;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:all .2s ease;
+}
+.checkin-btn:hover{border-color:#8dbbe9;color:#5b85ae;background:#f5faff}
+.timeline-item.is-done{opacity:.4}
+.timeline-item.is-done .checkin-btn{background:#eaf5ff;border-color:#b9d7f2;color:#5d91c2;font-weight:750}
+.timeline-item.is-done h3{text-decoration:line-through;text-decoration-thickness:1px}
+.place-title-link{cursor:pointer}
+.info-trigger{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:20px;height:20px;margin-left:6px;
+  border:1px solid #d9e7f4;border-radius:50%;
+  color:#6f9dca;background:#f3f9ff;font-size:11px;
+  vertical-align:middle;cursor:pointer;
+}
+.info-trigger:hover{background:#e6f3ff;border-color:#afd0ed}
+.progress-count{font-variant-numeric:tabular-nums}
 </style>
 </head>
-
 <body>
 <div class="page">
-
-  <div class="topbar">
-    <div class="brand">SIQUIJOR · 2026 / 10.03—10.05</div>
-    <div class="mode-pill"><span class="dot"></span><span id="modeText">菲律宾当地白天</span></div>
-  </div>
-
-  <!-- 1. 此刻关注 -->
-  <section class="card hero">
-    <div class="hero-main">
-      <div class="eyebrow">此刻关注 · NEXT EVENT</div>
-      <h1>先玩，再躺平。</h1>
-      <p>
+<div class="topbar">
+<div class="brand">SIQUIJOR · 2026 / 10.03—10.05</div>
+<div class="mode-pill"><span class="dot"></span><span id="modeText">菲律宾当地白天</span></div>
+</div>
+<!-- 1. 此刻关注 -->
+<section class="card hero">
+<div class="hero-main">
+<div class="eyebrow">此刻关注 · NEXT EVENT</div>
+<h1>先玩，再躺平。</h1>
+<p>
         10/3 探洞＋老树；10/4 先拍照、再玩水；10/5 把时间留给 Coco Grove 和离岛。
         本页所有行程时间以菲律宾时间 PHT（UTC+8）显示。
       </p>
-    </div>
-    <div class="hero-event">
-      <div>
-        <div class="next-label">下一个行程事件</div>
-        <div class="next-title" id="nextTitle">加载中…</div>
-        <div class="next-time" id="nextTime">—</div>
-      </div>
-      <div>
-        <div class="countdown">
-          <div class="cd-box"><div class="cd-num" id="dd">--</div><div class="cd-unit">天</div></div>
-          <div class="cd-box"><div class="cd-num" id="hh">--</div><div class="cd-unit">时</div></div>
-          <div class="cd-box"><div class="cd-num" id="mm">--</div><div class="cd-unit">分</div></div>
-          <div class="cd-box"><div class="cd-num" id="ss">--</div><div class="cd-unit">秒</div></div>
-        </div>
-        <div class="small-note" id="countdownNote">按绝对时间计算，换时区打开也不会错。</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 2. 行程总览地图 -->
-  <section class="section">
-    <div class="section-title">
-      <h2>行程总览地图</h2>
-      <div class="section-kicker">手绘示意 · 非比例地图</div>
-    </div>
-    <div class="card map-card">
-      <div class="map-wrap">
-        <svg class="map-svg" viewBox="0 0 1000 540" xmlns="http://www.w3.org/2000/svg" aria-label="Siquijor hand-drawn route map">
-          <defs>
-            <filter id="rough">
-              <feTurbulence type="fractalNoise" baseFrequency=".025" numOctaves="1" seed="7" result="noise"/>
-              <feDisplacementMap in="SourceGraphic" in2="noise" scale="2"/>
-            </filter>
-          </defs>
-
-          <!-- island silhouette -->
-          <path d="M185 145 C255 92 370 84 474 112 C582 92 731 127 814 203
+</div>
+<div class="hero-event">
+<div>
+<div class="next-label">下一个行程事件</div>
+<div class="next-title" id="nextTitle">加载中…</div>
+<div class="next-time" id="nextTime">—</div>
+</div>
+<div>
+<div class="countdown">
+<div class="cd-box"><div class="cd-num" id="dd">--</div><div class="cd-unit">天</div></div>
+<div class="cd-box"><div class="cd-num" id="hh">--</div><div class="cd-unit">时</div></div>
+<div class="cd-box"><div class="cd-num" id="mm">--</div><div class="cd-unit">分</div></div>
+<div class="cd-box"><div class="cd-num" id="ss">--</div><div class="cd-unit">秒</div></div>
+</div>
+<div class="small-note" id="countdownNote">按绝对时间计算，换时区打开也不会错。</div>
+</div>
+</div>
+</section>
+<!-- 2. 行程总览地图 -->
+<section class="section">
+<div class="section-title">
+<h2>行程总览地图</h2>
+<div class="section-kicker">手绘示意 · 非比例地图</div>
+</div>
+<div class="card map-card">
+<div class="map-wrap">
+<svg aria-label="Siquijor hand-drawn route map" class="map-svg" viewbox="0 0 1000 540" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<filter id="rough">
+<feturbulence basefrequency=".025" numoctaves="1" result="noise" seed="7" type="fractalNoise"></feturbulence>
+<fedisplacementmap in="SourceGraphic" in2="noise" scale="2"></fedisplacementmap>
+</filter>
+</defs>
+<!-- island silhouette -->
+<path d="M185 145 C255 92 370 84 474 112 C582 92 731 127 814 203
                    C870 254 858 351 795 405 C704 482 549 466 431 453
-                   C308 470 198 416 157 338 C122 273 129 188 185 145 Z"
-                fill="#e8f1fb" stroke="#b8cce2" stroke-width="3" filter="url(#rough)"/>
-          <path d="M220 177 C319 123 418 142 493 154 C603 122 720 162 781 223
+                   C308 470 198 416 157 338 C122 273 129 188 185 145 Z" fill="#e8f1fb" filter="url(#rough)" stroke="#b8cce2" stroke-width="3"></path>
+<path d="M220 177 C319 123 418 142 493 154 C603 122 720 162 781 223
                    C815 256 804 321 763 360 C688 430 568 418 445 410
-                   C330 435 235 389 198 323 C173 276 181 211 220 177 Z"
-                fill="none" stroke="#c9d9ea" stroke-width="2" stroke-dasharray="4 9"/>
+                   C330 435 235 389 198 323 C173 276 181 211 220 177 Z" fill="none" stroke="#c9d9ea" stroke-dasharray="4 9" stroke-width="2"></path>
+<!-- day 1 route -->
+<path d="M780 150 Q715 185 640 220 T470 310 T330 335 T280 278" fill="none" stroke="#88b8e8" stroke-dasharray="1 12" stroke-linecap="round" stroke-width="8"></path>
+<!-- day 2 route -->
+<path d="M280 278 Q320 225 450 190 T730 245 Q690 292 610 345 Q535 388 430 365" fill="none" stroke="#d59b72" stroke-dasharray="1 12" stroke-linecap="round" stroke-width="8"></path>
+<!-- day 3 route -->
+<path d="M280 278 Q210 270 175 235" fill="none" stroke="#76aee4" stroke-dasharray="1 12" stroke-linecap="round" stroke-width="8"></path>
+<!-- lodging -->
+<g transform="translate(270 262)">
+<circle cx="0" cy="0" fill="#fff" r="19" stroke="#87b9e7" stroke-width="3"></circle>
+<path d="M-9 1 L0 -7 L9 1 L9 10 L-9 10 Z" fill="none" stroke="#87b9e7" stroke-width="2.5"></path>
+<path d="M-3 10 L-3 4 L3 4 L3 10" fill="none" stroke="#87b9e7" stroke-width="2.5"></path>
+</g>
+<text fill="#5c82aa" font-size="16" font-weight="700" x="247" y="300">Coco Grove × 3日</text>
+<!-- labels -->
+<g font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
+<g transform="translate(805 132)">
+<circle fill="#76aee4" r="8"></circle><text fill="#6c7f96" font-size="15" x="15" y="5">Siquijor Port</text>
+</g>
+<g transform="translate(616 214)">
+<circle fill="#88b8e8" r="7"></circle><text fill="#6c7f96" font-size="15" x="14" y="5">Cantabon Cave</text>
+</g>
+<g transform="translate(470 302)">
+<circle fill="#88b8e8" r="7"></circle><text fill="#6c7f96" font-size="15" x="14" y="5">Balete Tree</text>
+</g>
+<g transform="translate(446 188)">
+<circle fill="#d59b72" r="7"></circle><text fill="#6e573f" font-size="15" x="14" y="5">Pitogo Cliff</text>
+</g>
+<g transform="translate(721 246)">
+<circle fill="#d59b72" r="7"></circle><text fill="#6e573f" font-size="15" x="-8" y="25">Salagdoong</text>
+</g>
+<g transform="translate(607 345)">
+<circle fill="#d59b72" r="7"></circle><text fill="#6e573f" font-size="15" x="14" y="5">Cambugahay</text>
+</g>
+</g>
+<g font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
+<text fill="#78857f" font-size="14" x="70" y="55">SIQUIJOR · ROUTE OVERVIEW</text>
+<text fill="#8293a8" font-size="12" x="760" y="488">示意路线 · 具体导航以 Google Maps 为准</text>
+</g>
+</svg>
+</div>
+<div class="legend">
+<div class="legend-item"><span class="legend-line legend-day1"></span>10/3 探洞＋老树</div>
+<div class="legend-item"><span class="legend-line legend-day2"></span>10/4 拍照＋玩水</div>
+<div class="legend-item"><span class="legend-line legend-day3"></span>10/5 酒店→港口</div>
+</div>
+<div class="map-note">🏠 Coco Grove 为三天住宿点；地图用于理解路线顺序，不按地图比例绘制。</div>
+</div>
+</section>
+<!-- 3. 已确认 / 待确认信息 -->
+<section class="section">
+<div class="section-title">
+<h2>预订与固定信息</h2>
+<div class="section-kicker">已确认 / 待确认一眼分清</div>
+</div>
+<div class="confirmed-grid">
+<article class="card info-card">
+<div class="info-head">
+<div class="info-type">HOTEL · 住宿</div>
+<span class="status confirmed">已确认</span>
+</div>
+<div class="info-name">Coco Grove Beach Resort</div>
+<div class="info-row"><span>入住</span><span>10/3 → 10/5 · 共 2 晚</span></div>
+<div class="info-row"><span>地址</span><span>Casa Coco, Siquijor Circumferential Rd, Tubod, San Juan, Siquijor</span></div>
+<div class="info-row"><span>电话</span><span>0917 314 1415 / 0969 521 5658</span></div>
+<div class="info-actions">
+<a class="mini-btn" href="https://www.google.com/maps/search/?api=1&amp;query=Coco+Grove+Beach+Resort+Siquijor" target="_blank">↗ Google Maps</a>
+<a class="mini-btn" href="tel:+639173141415">☎ 联系</a>
+</div>
+</article>
+<article class="card info-card">
+<div class="info-head">
+<div class="info-type">FERRY · OCEANJET</div>
+<span class="status pending">待正式班次</span>
+</div>
+<div class="info-name">Tagbilaran ⇄ Siquijor</div>
+<div class="info-row"><span>10/3</span><span>暂按 07:30 Bohol → Siquijor · PHT (UTC+8)</span></div>
+<div class="info-row"><span>10/5</span><span>暂按 14:30 Siquijor → Tagbilaran · PHT (UTC+8)</span></div>
+<div class="info-row"><span>官网</span><span>正式班次、票价、可售状态以 OceanJet 官方查询为准</span></div>
+<div class="info-row"><span>客服</span><span>(032) 255-7560 · customerservice@oceanjet.net</span></div>
+<div class="info-actions">
+<a class="mini-btn" href="https://www.oceanjet.net/" target="_blank">↗ OceanJet</a>
+<a class="mini-btn" href="https://oceanjet.net/contact-us" target="_blank">☎ 联系方式</a>
+</div>
+</article>
+<article class="card info-card">
+<div class="info-head">
+<div class="info-type">SCOOTER · 双人一车</div>
+<span class="status pending">待确认</span>
+</div>
+<div class="info-name">优先：Coco Grove 酒店租车</div>
+<div class="info-row"><span>时间</span><span>10/3 寄存后取车 → 10/4 全部行程结束后还车</span></div>
+<div class="info-row"><span>目标</span><span>125cc 自动挡 · 2人 · 2顶头盔 · 车锁</span></div>
+<div class="info-row"><span>参考价</span><span>当地 2026 常见约 ₱350–500/天；Honda Click 125 公开参考约 ₱450/天</span></div>
+<div class="info-row"><span>备选</span><span>CASSIOPEIA：06:00–21:00 · 0969 616 7939；Boogie：24h · 0970 291 9314</span></div>
+<div class="info-actions">
+<a class="mini-btn" href="https://www.google.com/maps/search/?api=1&amp;query=CASSIOPEIA+MOTORCYCLE+RENTAL+Siquijor" target="_blank">↗ CASSIOPEIA</a>
+<a class="mini-btn" href="https://www.google.com/maps/search/?api=1&amp;query=Boogie+motorbike+rental+Siquijor" target="_blank">↗ Boogie</a>
+</div>
+</article>
+<article class="card info-card">
+<div class="info-head">
+<div class="info-type">ACTIVITIES · 门票 / 玩法</div>
+<span class="status confirmed">已定行程</span>
+</div>
+<div class="info-name">5个核心地点</div>
+<div class="info-row"><span>10/3</span><span>Cantabon Cave · Old Enchanted Balete Tree</span></div>
+<div class="info-row"><span>10/4</span><span>Pitogo Cliff · Salagdoong Beach · Cambugahay Falls</span></div>
+<div class="info-row"><span>Salagdoong</span><span>以海边悬崖＋无人机拍照为主；跳水不设为固定任务</span></div>
+<div class="info-row"><span>门票</span><span>各景点现场费用以当天实际收费为准</span></div>
+</article>
+</div>
+</section>
+<!-- 4. 逐日时间轴 -->
+<section class="section">
+<div class="section-title">
+<h2>逐日行程时间轴</h2>
+<div class="section-kicker">共 <span id="dayCount">3</span> 天 · 每个时间均为 PHT (UTC+8) · 打卡状态保存在本浏览器</div>
+</div>
+<div class="days">
+<!-- DAY 1 -->
+<details class="card day-card day1" data-day="2026-10-03" open="">
+<summary class="day-summary">
+<div class="day-num">10/3</div>
+<div class="day-title">
+<strong>探洞＋老树</strong>
+<small>不化妆日 · 寄存行李 → 租摩托 → Cantabon → Balete → Coco Grove</small>
+</div>
+<div class="progress">
+<div class="progress-top"><span>打卡进度</span><span class="progress-count">0 / 0</span></div>
+<div class="progress-bar"><div class="progress-fill"></div></div>
+</div>
+<div class="chev">⌄</div>
+</summary>
+<div class="day-body">
+<div class="route-tools">
+<div class="left">🏠 住宿：Coco Grove Beach Resort</div>
+<div class="day-reminder">
+<div class="reminder-head">
+<div class="reminder-title"><span class="icon">⚠</span>当天提醒 · 先看这个</div>
+<span class="reminder-badge">10/3 · 探洞日</span>
+</div>
+<div class="reminder-grid">
+<div class="reminder-chip blue"><b>📱 防水</b><small>手机防水袋必带；Action 5 防水配置＋挂脖</small></div>
+<div class="reminder-chip coral"><b>🦟 防晒＋防蚊</b><small>防晒霜、蚊虫喷雾出发前使用</small></div>
+<div class="reminder-chip yellow"><b>🧴 擦水＋换洗</b><small>一次性可擦干浴巾/擦水巾、水鞋、换洗衣物</small></div>
+<div class="reminder-chip peach"><b>💵 现金提前装好</b><small>带够当天用的钱，放进防水袋；大额现金留酒店</small></div>
+<div class="reminder-chip lav"><b>📷 贵重设备别带</b><small>富士、无人机、Pocket 3、电脑全部留 Coco Grove</small></div>
+<div class="reminder-chip blue"><b>🛵 取车确认</b><small>2 顶头盔、车锁、油量、车况；双人 scooter</small></div>
+</div>
+</div>
+<button class="map-button" onclick="openDayRoute('day1')">↗ 打开全天多点导航</button>
+</div>
+<div class="day-map">
+<svg viewbox="0 0 900 220" xmlns="http://www.w3.org/2000/svg">
+<path d="M80 150 Q210 72 345 122 T620 88 T820 145" fill="none" stroke="#88b8e8" stroke-dasharray="1 13" stroke-linecap="round" stroke-width="10"></path>
+<circle cx="80" cy="150" fill="#fff" r="13" stroke="#76aee4" stroke-width="3"></circle>
+<circle cx="210" cy="105" fill="#fff" r="10" stroke="#88b8e8" stroke-width="3"></circle>
+<circle cx="470" cy="120" fill="#fff" r="10" stroke="#88b8e8" stroke-width="3"></circle>
+<circle cx="650" cy="89" fill="#fff" r="10" stroke="#88b8e8" stroke-width="3"></circle>
+<circle cx="820" cy="145" fill="#fff" r="13" stroke="#87b9e7" stroke-width="3"></circle>
+<text fill="#718198" font-size="14" x="59" y="184">Siquijor Port</text>
+<text fill="#6b8fb2" font-size="14" x="184" y="82">Coco Grove</text>
+<text fill="#6b8fb2" font-size="14" x="435" y="99">Cantabon</text>
+<text fill="#6b8fb2" font-size="14" x="625" y="65">Balete Tree</text>
+<text fill="#6b8fb2" font-size="14" x="785" y="178">回酒店</text>
+</svg>
+</div>
+<div class="timeline">
+<div class="timeline-item">
+<div class="time-col">07:30–09:30<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3>🚢 OceanJet · Tagbilaran → Siquijor</h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day1-1" type="button">O 打卡</button></div>
 
-          <!-- day 1 route -->
-          <path d="M780 150 Q715 185 640 220 T470 310 T330 335 T280 278"
-                fill="none" stroke="#88b8e8" stroke-width="8" stroke-linecap="round"
-                stroke-dasharray="1 12"/>
-          <!-- day 2 route -->
-          <path d="M280 278 Q320 225 450 190 T730 245 Q690 292 610 345 Q535 388 430 365"
-                fill="none" stroke="#d59b72" stroke-width="8" stroke-linecap="round"
-                stroke-dasharray="1 12"/>
-          <!-- day 3 route -->
-          <path d="M280 278 Q210 270 175 235"
-                fill="none" stroke="#76aee4" stroke-width="8" stroke-linecap="round"
-                stroke-dasharray="1 12"/>
+<p>暂按往年时段预留；正式班次以 OceanJet 官方公布为准。</p>
+<div class="tags"><span class="tag">航班</span><span class="tag warn">待正式船期</span></div>
+</div>
+</div>
+<div class="timeline-item">
+<div class="time-col">09:30–10:15<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&amp;query=Coco+Grove+Beach+Resort+Siquijor" target="_blank">🚗 港口 → Coco Grove</a></h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day1-2" type="button">O 打卡</button></div>
 
-          <!-- lodging -->
-          <g transform="translate(270 262)">
-            <circle cx="0" cy="0" r="19" fill="#fff" stroke="#87b9e7" stroke-width="3"/>
-            <path d="M-9 1 L0 -7 L9 1 L9 10 L-9 10 Z" fill="none" stroke="#87b9e7" stroke-width="2.5"/>
-            <path d="M-3 10 L-3 4 L3 4 L3 10" fill="none" stroke="#87b9e7" stroke-width="2.5"/>
-          </g>
-          <text x="247" y="300" font-size="16" fill="#5c82aa" font-weight="700">Coco Grove × 3日</text>
+<p>酒店接送 → 寄存大件行李 → 租一辆双人 scooter。确认 2 顶头盔、车锁、油量和车况。</p>
+<div class="tags"><span class="tag nav">导航</span><span class="tag book">需提前确认</span></div>
+<div class="travel-pill">约10 km · 约20–25分钟</div>
+</div>
+</div>
+<div class="timeline-item">
+<div class="time-col">10:15–10:50<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3><span class="place-title-link" data-place="Cantabon Cave">🛵 Coco Grove → Cantabon Cave</span><button aria-label="查看 Cantabon Cave 介绍" class="info-trigger" data-place="Cantabon Cave" type="button">i</button></h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day1-3" type="button">O 打卡</button></div>
 
-          <!-- labels -->
-          <g font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
-            <g transform="translate(805 132)">
-              <circle r="8" fill="#76aee4"/><text x="15" y="5" font-size="15" fill="#6c7f96">Siquijor Port</text>
-            </g>
-            <g transform="translate(616 214)">
-              <circle r="7" fill="#88b8e8"/><text x="14" y="5" font-size="15" fill="#6c7f96">Cantabon Cave</text>
-            </g>
-            <g transform="translate(470 302)">
-              <circle r="7" fill="#88b8e8"/><text x="14" y="5" font-size="15" fill="#6c7f96">Balete Tree</text>
-            </g>
-            <g transform="translate(446 188)">
-              <circle r="7" fill="#d59b72"/><text x="14" y="5" font-size="15" fill="#6e573f">Pitogo Cliff</text>
-            </g>
-            <g transform="translate(721 246)">
-              <circle r="7" fill="#d59b72"/><text x="-8" y="25" font-size="15" fill="#6e573f">Salagdoong</text>
-            </g>
-            <g transform="translate(607 345)">
-              <circle r="7" fill="#d59b72"/><text x="14" y="5" font-size="15" fill="#6e573f">Cambugahay</text>
-            </g>
-          </g>
+<p>骑摩托前往洞穴；雨天和道路情况留机动时间。</p>
+<div class="tags"><span class="tag nav">导航</span></div>
+<div class="travel-pill">约12–14 km · 约30–35分钟</div>
+</div>
+</div>
+<div class="timeline-item">
+<div class="time-col">11:00–13:00<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3><span class="place-title-link" data-place="Cantabon Cave">🕳️ Cantabon Cave</span><button aria-label="查看 Cantabon Cave 介绍" class="info-trigger" data-place="Cantabon Cave" type="button">i</button></h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day1-4" type="button">O 打卡</button></div>
 
-          <g font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
-            <text x="70" y="55" font-size="14" fill="#78857f">SIQUIJOR · ROUTE OVERVIEW</text>
-            <text x="760" y="488" font-size="12" fill="#8293a8">示意路线 · 具体导航以 Google Maps 为准</text>
-          </g>
-        </svg>
-      </div>
+<p>涉水、攀爬、洞穴探险。当天不化妆，Action 5 按防水配置＋挂脖使用。</p>
+<div class="tags"><span class="tag intro">介绍</span><span class="tag warn">注意</span></div>
+</div>
+</div>
+<div class="timeline-item">
+<div class="time-col">13:00–14:00<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3>🍜 午餐</h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day1-5" type="button">O 打卡</button></div>
 
-      <div class="legend">
-        <div class="legend-item"><span class="legend-line legend-day1"></span>10/3 探洞＋老树</div>
-        <div class="legend-item"><span class="legend-line legend-day2"></span>10/4 拍照＋玩水</div>
-        <div class="legend-item"><span class="legend-line legend-day3"></span>10/5 酒店→港口</div>
-      </div>
-      <div class="map-note">🏠 Coco Grove 为三天住宿点；地图用于理解路线顺序，不按地图比例绘制。</div>
-    </div>
-  </section>
+<p>简单用餐、补水；现金提前装在防水袋里。</p>
+<div class="tags"><span class="tag warn">注意</span></div>
+</div>
+</div>
+<div class="timeline-item">
+<div class="time-col">14:00–14:25<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3><span class="place-title-link" data-place="Old Enchanted Balete Tree">🛵 Cantabon Cave → Old Enchanted Balete Tree</span><button aria-label="查看 Old Enchanted Balete Tree 介绍" class="info-trigger" data-place="Old Enchanted Balete Tree" type="button">i</button></h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day1-6" type="button">O 打卡</button></div>
 
-  <!-- 3. 已确认 / 待确认信息 -->
-  <section class="section">
-    <div class="section-title">
-      <h2>预订与固定信息</h2>
-      <div class="section-kicker">已确认 / 待确认一眼分清</div>
-    </div>
+<p>继续骑车前往老树。</p>
+<div class="tags"><span class="tag nav">导航</span></div>
+<div class="travel-pill">约10–12 km · 约20–25分钟</div>
+</div>
+</div>
+<div class="timeline-item">
+<div class="time-col">14:25–15:05<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3><span class="place-title-link" data-place="Old Enchanted Balete Tree">🌳 Old Enchanted Balete Tree</span><button aria-label="查看 Old Enchanted Balete Tree 介绍" class="info-trigger" data-place="Old Enchanted Balete Tree" type="button">i</button></h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day1-7" type="button">O 打卡</button></div>
 
-    <div class="confirmed-grid">
+<p>巨型老榕树＋鱼疗；快速打卡，不再安排其他景点。</p>
+<div class="tags"><span class="tag intro">介绍</span><span class="tag nav">导航</span></div>
+</div>
+</div>
+<div class="timeline-item">
+<div class="time-col">15:05–15:20<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&amp;query=Coco+Grove+Beach+Resort+Siquijor" target="_blank">🛵 Balete Tree → Coco Grove</a></h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day1-8" type="button">O 打卡</button></div>
 
-      <article class="card info-card">
-        <div class="info-head">
-          <div class="info-type">HOTEL · 住宿</div>
-          <span class="status confirmed">已确认</span>
-        </div>
-        <div class="info-name">Coco Grove Beach Resort</div>
-        <div class="info-row"><span>入住</span><span>10/3 → 10/5 · 共 2 晚</span></div>
-        <div class="info-row"><span>地址</span><span>Casa Coco, Siquijor Circumferential Rd, Tubod, San Juan, Siquijor</span></div>
-        <div class="info-row"><span>电话</span><span>0917 314 1415 / 0969 521 5658</span></div>
-        <div class="info-actions">
-          <a class="mini-btn" href="https://www.google.com/maps/search/?api=1&query=Coco+Grove+Beach+Resort+Siquijor" target="_blank">↗ Google Maps</a>
-          <a class="mini-btn" href="tel:+639173141415">☎ 联系</a>
-        </div>
-      </article>
+<p>回酒店，准备洗澡和休息。</p>
+<div class="tags"><span class="tag nav">导航</span></div>
+<div class="travel-pill">约7–8 km · 约13–15分钟</div>
+</div>
+</div>
+<div class="timeline-item">
+<div class="time-col">15:30+<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&amp;query=Coco+Grove+Beach+Resort+Siquijor" target="_blank">🏝️ Coco Grove · 洗澡＋躺平</a></h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day1-9" type="button">O 打卡</button></div>
 
-      <article class="card info-card">
-        <div class="info-head">
-          <div class="info-type">FERRY · OCEANJET</div>
-          <span class="status pending">待正式班次</span>
-        </div>
-        <div class="info-name">Tagbilaran ⇄ Siquijor</div>
-        <div class="info-row"><span>10/3</span><span>暂按 07:30 Bohol → Siquijor · PHT (UTC+8)</span></div>
-        <div class="info-row"><span>10/5</span><span>暂按 14:30 Siquijor → Tagbilaran · PHT (UTC+8)</span></div>
-        <div class="info-row"><span>官网</span><span>正式班次、票价、可售状态以 OceanJet 官方查询为准</span></div>
-        <div class="info-row"><span>客服</span><span>(032) 255-7560 · customerservice@oceanjet.net</span></div>
-        <div class="info-actions">
-          <a class="mini-btn" href="https://www.oceanjet.net/" target="_blank">↗ OceanJet</a>
-          <a class="mini-btn" href="https://oceanjet.net/contact-us" target="_blank">☎ 联系方式</a>
-        </div>
-      </article>
+<p>洗澡、换干衣服、泳池、沙滩、午睡、晚餐、看日落。</p>
+<div class="tags"><span class="tag intro">介绍</span></div>
+</div>
+</div>
+</div>
+<div class="stay">
+<strong>🏠 当日住宿</strong>
+<span>Coco Grove Beach Resort · Casa Coco, Siquijor Circumferential Rd, Tubod, San Juan</span>
+</div>
+</div>
+</details>
+<!-- DAY 2 -->
+<details class="card day-card day2" data-day="2026-10-04">
+<summary class="day-summary">
+<div class="day-num">10/4</div>
+<div class="day-title">
+<strong>先拍照 → 再玩水 📸💦</strong>
+<small>Pitogo → Salagdoong（拍照/无人机）→ Cambugahay → 回酒店还车</small>
+</div>
+<div class="progress">
+<div class="progress-top"><span>打卡进度</span><span class="progress-count">0 / 0</span></div>
+<div class="progress-bar"><div class="progress-fill"></div></div>
+</div>
+<div class="chev">⌄</div>
+</summary>
+<div class="day-body">
+<div class="route-tools">
+<div class="left">🏠 住宿：Coco Grove Beach Resort</div>
+<div class="day-reminder">
+<div class="reminder-head">
+<div class="reminder-title"><span class="icon">✦</span>当天提醒 · 先看这个</div>
+<span class="reminder-badge">10/4 · 拍照＋玩水</span>
+</div>
+<div class="reminder-grid">
+<div class="reminder-chip blue"><b>📷 相机整装</b><small>富士＋两支镜头＋备用电池＋存储卡＋镜头布</small></div>
+<div class="reminder-chip coral"><b>☀ 防晒装备</b><small>防晒霜、防晒雨伞、防晒帽、墨镜；骑摩托会晒</small></div>
+<div class="reminder-chip yellow"><b>🏨 房卡必带</b><small>与手机、少量现金放固定小袋</small></div>
+<div class="reminder-chip peach"><b>🚁 Salagdoong先拍</b><small>无人机＋人物大片先完成；跳水不设为硬任务</small></div>
+<div class="reminder-chip lav"><b>💦 下水前收设备</b><small>进 Cambugahay 前收好所有非防水贵重设备</small></div>
+<div class="reminder-chip blue"><b>🛵 最后要还车</b><small>回 Coco Grove 还车，确认钥匙、头盔、押金</small></div>
+</div>
+</div>
+<button class="map-button" onclick="openDayRoute('day2')">↗ 打开全天多点导航</button>
+</div>
+<div class="day-map">
+<svg viewbox="0 0 900 220" xmlns="http://www.w3.org/2000/svg">
+<path d="M82 142 Q190 70 320 104 T635 64 T770 137 Q655 157 560 180 Q410 202 270 160" fill="none" stroke="#d59b72" stroke-dasharray="1 13" stroke-linecap="round" stroke-width="10"></path>
+<circle cx="82" cy="142" fill="#fff" r="13" stroke="#87b9e7" stroke-width="3"></circle>
+<circle cx="280" cy="104" fill="#fff" r="10" stroke="#d59b72" stroke-width="3"></circle>
+<circle cx="635" cy="64" fill="#fff" r="10" stroke="#d59b72" stroke-width="3"></circle>
+<circle cx="560" cy="180" fill="#fff" r="10" stroke="#d59b72" stroke-width="3"></circle>
+<circle cx="270" cy="160" fill="#fff" r="13" stroke="#87b9e7" stroke-width="3"></circle>
+<text fill="#718198" font-size="14" x="60" y="176">Coco Grove</text>
+<text fill="#7a91ab" font-size="14" x="246" y="82">Pitogo</text>
+<text fill="#7a91ab" font-size="14" x="608" y="39">Salagdoong</text>
+<text fill="#7a91ab" font-size="14" x="532" y="205">Cambugahay</text>
+<text fill="#6b8fb2" font-size="14" x="248" y="188">回酒店</text>
+</svg>
+</div>
+<div class="timeline">
+<div class="timeline-item">
+<div class="time-col">07:00–07:45<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3>☕ 早餐＋💄 化妆＋整理摄影包</h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day2-1" type="button">O 打卡</button></div>
 
-      <article class="card info-card">
-        <div class="info-head">
-          <div class="info-type">SCOOTER · 双人一车</div>
-          <span class="status pending">待确认</span>
-        </div>
-        <div class="info-name">优先：Coco Grove 酒店租车</div>
-        <div class="info-row"><span>时间</span><span>10/3 寄存后取车 → 10/4 全部行程结束后还车</span></div>
-        <div class="info-row"><span>目标</span><span>125cc 自动挡 · 2人 · 2顶头盔 · 车锁</span></div>
-        <div class="info-row"><span>参考价</span><span>当地 2026 常见约 ₱350–500/天；Honda Click 125 公开参考约 ₱450/天</span></div>
-        <div class="info-row"><span>备选</span><span>CASSIOPEIA：06:00–21:00 · 0969 616 7939；Boogie：24h · 0970 291 9314</span></div>
-        <div class="info-actions">
-          <a class="mini-btn" href="https://www.google.com/maps/search/?api=1&query=CASSIOPEIA+MOTORCYCLE+RENTAL+Siquijor" target="_blank">↗ CASSIOPEIA</a>
-          <a class="mini-btn" href="https://www.google.com/maps/search/?api=1&query=Boogie+motorbike+rental+Siquijor" target="_blank">↗ Boogie</a>
-        </div>
-      </article>
+<p>今天先拍照。相机、两支镜头、备用电池、存储卡、镜头布提前带齐。</p>
+<div class="tags"><span class="tag warn">注意</span><span class="tag intro">介绍</span></div>
+</div>
+</div>
+<div class="timeline-item">
+<div class="time-col">07:45–07:50<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3><span class="place-title-link" data-place="Pitogo Cliff">🛵 Coco Grove → Pitogo Cliff</span><button aria-label="查看 Pitogo Cliff 介绍" class="info-trigger" data-place="Pitogo Cliff" type="button">i</button></h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day2-2" type="button">O 打卡</button></div>
 
-      <article class="card info-card">
-        <div class="info-head">
-          <div class="info-type">ACTIVITIES · 门票 / 玩法</div>
-          <span class="status confirmed">已定行程</span>
-        </div>
-        <div class="info-name">5个核心地点</div>
-        <div class="info-row"><span>10/3</span><span>Cantabon Cave · Old Enchanted Balete Tree</span></div>
-        <div class="info-row"><span>10/4</span><span>Pitogo Cliff · Salagdoong Beach · Cambugahay Falls</span></div>
-        <div class="info-row"><span>Salagdoong</span><span>以海边悬崖＋无人机拍照为主；跳水不设为固定任务</span></div>
-        <div class="info-row"><span>门票</span><span>各景点现场费用以当天实际收费为准</span></div>
-      </article>
+<p>近距离第一站，先完成干净妆发的人像照片。</p>
+<div class="tags"><span class="tag nav">导航</span></div>
+<div class="travel-pill">约2.6 km · 约3–5分钟</div>
+</div>
+</div>
+<div class="timeline-item">
+<div class="time-col">07:50–08:50<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3><span class="place-title-link" data-place="Pitogo Cliff">📸 Pitogo Cliff</span><button aria-label="查看 Pitogo Cliff 介绍" class="info-trigger" data-place="Pitogo Cliff" type="button">i</button></h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day2-3" type="button">O 打卡</button></div>
 
-    </div>
-  </section>
+<p>悬崖、礁石、蓝海、人像＋无人机素材；保持妆发完整。</p>
+<div class="tags"><span class="tag intro">介绍</span><span class="tag nav">导航</span></div>
+</div>
+</div>
+<div class="timeline-item">
+<div class="time-col">08:50–09:25<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3><span class="place-title-link" data-place="Salagdoong Beach">🛵 Pitogo Cliff → Salagdoong Beach</span><button aria-label="查看 Salagdoong Beach 介绍" class="info-trigger" data-place="Salagdoong Beach" type="button">i</button></h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day2-4" type="button">O 打卡</button></div>
 
-  <!-- 4. 逐日时间轴 -->
-  <section class="section">
-    <div class="section-title">
-      <h2>逐日行程时间轴</h2>
-      <div class="section-kicker">共 <span id="dayCount">3</span> 天 · 每个时间均为 PHT (UTC+8)</div>
-    </div>
+<p>一路防晒、补水；到海边后先拍，不跳水。</p>
+<div class="tags"><span class="tag nav">导航</span></div>
+<div class="travel-pill">约36–38 km · 约30–35分钟</div>
+</div>
+</div>
+<div class="timeline-item">
+<div class="time-col">09:25–10:45<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3><span class="place-title-link" data-place="Salagdoong Beach">🚁 Salagdoong Beach · 海边写真</span><button aria-label="查看 Salagdoong Beach 介绍" class="info-trigger" data-place="Salagdoong Beach" type="button">i</button></h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day2-5" type="button">O 打卡</button></div>
 
-    <div class="days">
+<p>悬崖、跳台、蓝海、人像和无人机素材。<b>跳水不列为固定项目</b>，有时间且条件合适再自由决定。</p>
+<div class="tags"><span class="tag intro">介绍</span><span class="tag warn">注意</span><span class="tag nav">导航</span></div>
+</div>
+</div>
+<div class="timeline-item">
+<div class="time-col">10:45–11:15<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3><span class="place-title-link" data-place="Cambugahay Falls">🛵 Salagdoong → Cambugahay Falls</span><button aria-label="查看 Cambugahay Falls 介绍" class="info-trigger" data-place="Cambugahay Falls" type="button">i</button></h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day2-6" type="button">O 打卡</button></div>
 
-      <!-- DAY 1 -->
-      <details class="card day-card day1" data-day="2026-10-03" open>
-        <summary class="day-summary">
-          <div class="day-num">10/3</div>
-          <div class="day-title">
-            <strong>探洞＋老树</strong>
-            <small>不化妆日 · 寄存行李 → 租摩托 → Cantabon → Balete → Coco Grove</small>
-          </div>
-          <div class="progress">
-            <div class="progress-top"><span>打卡进度</span><span>0 / 5</span></div>
-            <div class="progress-bar"><div class="progress-fill"></div></div>
-          </div>
-          <div class="chev">⌄</div>
-        </summary>
-        <div class="day-body">
-          <div class="route-tools">
-            <div class="left">🏠 住宿：Coco Grove Beach Resort</div>
+<p>向 Lazi 方向返回，开始进入玩水阶段。</p>
+<div class="tags"><span class="tag nav">导航</span></div>
+<div class="travel-pill">约15–18 km · 约20–25分钟</div>
+</div>
+</div>
+<div class="timeline-item">
+<div class="time-col">11:15–13:15<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3><span class="place-title-link" data-place="Cambugahay Falls">💦 Cambugahay Falls</span><button aria-label="查看 Cambugahay Falls 介绍" class="info-trigger" data-place="Cambugahay Falls" type="button">i</button></h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day2-7" type="button">O 打卡</button></div>
 
-          <div class="day-reminder">
-            <div class="reminder-head">
-              <div class="reminder-title"><span class="icon">⚠</span>当天提醒 · 先看这个</div>
-              <span class="reminder-badge">10/3 · 探洞日</span>
-            </div>
-            <div class="reminder-grid">
-              <div class="reminder-chip blue"><b>📱 防水</b><small>手机防水袋必带；Action 5 防水配置＋挂脖</small></div>
-              <div class="reminder-chip coral"><b>🦟 防晒＋防蚊</b><small>防晒霜、蚊虫喷雾出发前使用</small></div>
-              <div class="reminder-chip yellow"><b>🧴 擦水＋换洗</b><small>一次性可擦干浴巾/擦水巾、水鞋、换洗衣物</small></div>
-              <div class="reminder-chip peach"><b>💵 现金提前装好</b><small>带够当天用的钱，放进防水袋；大额现金留酒店</small></div>
-              <div class="reminder-chip lav"><b>📷 贵重设备别带</b><small>富士、无人机、Pocket 3、电脑全部留 Coco Grove</small></div>
-              <div class="reminder-chip blue"><b>🛵 取车确认</b><small>2 顶头盔、车锁、油量、车况；双人 scooter</small></div>
-            </div>
-          </div>
+<p>树藤荡水、跳入水潭、瀑布池。下水前收好富士相机、镜头、无人机等非防水设备。</p>
+<div class="tags"><span class="tag intro">介绍</span><span class="tag warn">注意</span></div>
+</div>
+</div>
+<div class="timeline-item">
+<div class="time-col">13:15–14:00<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3>🍜 午餐＋补水</h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day2-8" type="button">O 打卡</button></div>
 
-            <button class="map-button" onclick="openDayRoute('day1')">↗ 打开全天多点导航</button>
-          </div>
-          <div class="day-map">
-            <svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg">
-              <path d="M80 150 Q210 72 345 122 T620 88 T820 145" fill="none" stroke="#88b8e8" stroke-width="10" stroke-linecap="round" stroke-dasharray="1 13"/>
-              <circle cx="80" cy="150" r="13" fill="#fff" stroke="#76aee4" stroke-width="3"/>
-              <circle cx="210" cy="105" r="10" fill="#fff" stroke="#88b8e8" stroke-width="3"/>
-              <circle cx="470" cy="120" r="10" fill="#fff" stroke="#88b8e8" stroke-width="3"/>
-              <circle cx="650" cy="89" r="10" fill="#fff" stroke="#88b8e8" stroke-width="3"/>
-              <circle cx="820" cy="145" r="13" fill="#fff" stroke="#87b9e7" stroke-width="3"/>
-              <text x="59" y="184" font-size="14" fill="#718198">Siquijor Port</text>
-              <text x="184" y="82" font-size="14" fill="#6b8fb2">Coco Grove</text>
-              <text x="435" y="99" font-size="14" fill="#6b8fb2">Cantabon</text>
-              <text x="625" y="65" font-size="14" fill="#6b8fb2">Balete Tree</text>
-              <text x="785" y="178" font-size="14" fill="#6b8fb2">回酒店</text>
-            </svg>
-          </div>
+<p>简单吃，补足水分。</p>
+</div>
+</div>
+<div class="timeline-item">
+<div class="time-col">14:00–14:30<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&amp;query=Coco+Grove+Beach+Resort+Siquijor" target="_blank">🛵 Cambugahay Falls → Coco Grove</a></h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day2-9" type="button">O 打卡</button></div>
 
-          <div class="timeline">
-            <div class="timeline-item">
-              <div class="time-col">07:30–09:30<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3>🚢 OceanJet · Tagbilaran → Siquijor</h3>
-                <p>暂按往年时段预留；正式班次以 OceanJet 官方公布为准。</p>
-                <div class="tags"><span class="tag">航班</span><span class="tag warn">待正式船期</span></div>
-              </div>
-            </div>
+<p>回酒店后直接还车。</p>
+<div class="tags"><span class="tag nav">导航</span></div>
+<div class="travel-pill">约14.6 km · 约28–30分钟</div>
+</div>
+</div>
+<div class="timeline-item">
+<div class="time-col">14:30–15:00<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3>🛵 还摩托车</h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day2-10" type="button">O 打卡</button></div>
 
-            <div class="timeline-item">
-              <div class="time-col">09:30–10:15<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&query=Coco+Grove+Beach+Resort+Siquijor" target="_blank">🚗 港口 → Coco Grove</a></h3>
-                <p>酒店接送 → 寄存大件行李 → 租一辆双人 scooter。确认 2 顶头盔、车锁、油量和车况。</p>
-                <div class="tags"><span class="tag nav">导航</span><span class="tag book">需提前确认</span></div>
-                <div class="travel-pill">约10 km · 约20–25分钟</div>
-              </div>
-            </div>
+<p>归还车辆、2顶头盔、车钥匙；确认押金退还方式，并检查个人物品。</p>
+<div class="tags"><span class="tag book">需提前确认</span><span class="tag warn">注意</span></div>
+</div>
+</div>
+<div class="timeline-item">
+<div class="time-col">15:00+<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&amp;query=Coco+Grove+Beach+Resort+Siquijor" target="_blank">🏨 Coco Grove · 洗澡＋躺平</a></h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day2-11" type="button">O 打卡</button></div>
 
-            <div class="timeline-item">
-              <div class="time-col">10:15–10:50<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&query=Cantabon+Cave+Siquijor" target="_blank">🛵 Coco Grove → Cantabon Cave</a></h3>
-                <p>骑摩托前往洞穴；雨天和道路情况留机动时间。</p>
-                <div class="tags"><span class="tag nav">导航</span></div>
-                <div class="travel-pill">约12–14 km · 约30–35分钟</div>
-              </div>
-            </div>
+<p>今天不再安排外出。</p>
+<div class="tags"><span class="tag intro">介绍</span></div>
+</div>
+</div>
+</div>
+<div class="stay">
+<strong>🏠 当日住宿</strong>
+<span>Coco Grove Beach Resort · Casa Coco, Siquijor Circumferential Rd, Tubod, San Juan</span>
+</div>
+</div>
+</details>
+<!-- DAY 3 -->
+<details class="card day-card day3" data-day="2026-10-05">
+<summary class="day-summary">
+<div class="day-num">10/5</div>
+<div class="day-title">
+<strong>Coco Grove 躺平日 🏝️</strong>
+<small>沙滩＋泳池 → 午餐 → 收拾 → Siquijor Port → OceanJet</small>
+</div>
+<div class="progress">
+<div class="progress-top"><span>打卡进度</span><span class="progress-count">0 / 0</span></div>
+<div class="progress-bar"><div class="progress-fill"></div></div>
+</div>
+<div class="chev">⌄</div>
+</summary>
+<div class="day-body">
+<div class="route-tools">
+<div class="left">🏠 上午仍住 Coco Grove · 下午离岛</div>
+<div class="day-reminder">
+<div class="reminder-head">
+<div class="reminder-title"><span class="icon">♡</span>当天提醒 · 先看这个</div>
+<span class="reminder-badge">10/5 · 慢慢离岛</span>
+</div>
+<div class="reminder-grid">
+<div class="reminder-chip blue"><b>🏝️ 不安排浮潜</b><small>沙滩、泳池、发呆为主；想下水再临时决定</small></div>
+<div class="reminder-chip coral"><b>🧳 退房检查</b><small>护照、手机、充电宝、相机电池、房卡、小物品</small></div>
+<div class="reminder-chip yellow"><b>🚢 船期</b><small>OceanJet 正式班次以票面/官方信息为准</small></div>
+<div class="reminder-chip peach"><b>⏰ 提前去港口</b><small>按正式船班倒推酒店送站时间</small></div>
+<div class="reminder-chip blue"><b>☕ 不赶景点</b><small>上午不安排远距离目的地，留给 Coco Grove</small></div>
+<div class="reminder-chip lav"><b>📍 导航</b><small>Coco Grove → 港口约10 km，约20–25分钟</small></div>
+</div>
+</div>
+<button class="map-button" onclick="openDayRoute('day3')">↗ 打开全天多点导航</button>
+</div>
+<div class="day-map">
+<svg viewbox="0 0 900 220" xmlns="http://www.w3.org/2000/svg">
+<path d="M130 120 Q340 54 560 98 T830 132" fill="none" stroke="#76aee4" stroke-dasharray="1 13" stroke-linecap="round" stroke-width="10"></path>
+<circle cx="130" cy="120" fill="#fff" r="13" stroke="#87b9e7" stroke-width="3"></circle>
+<circle cx="830" cy="132" fill="#fff" r="13" stroke="#76aee4" stroke-width="3"></circle>
+<text fill="#6b8fb2" font-size="14" x="104" y="154">Coco Grove</text>
+<text fill="#638fbf" font-size="14" x="765" y="166">Siquijor Port</text>
+<text fill="#8090a5" font-size="14" x="330" y="67">沙滩 · 泳池 · 午餐</text>
+</svg>
+</div>
+<div class="timeline">
+<div class="timeline-item">
+<div class="time-col">上午<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&amp;query=Coco+Grove+Beach+Resort+Siquijor" target="_blank">🥐 早餐 → 沙滩 → 泳池</a></h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day3-1" type="button">O 打卡</button></div>
 
-            <div class="timeline-item">
-              <div class="time-col">11:00–13:00<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&query=Cantabon+Cave+Siquijor" target="_blank">🕳️ Cantabon Cave</a></h3>
-                <p>涉水、攀爬、洞穴探险。当天不化妆，Action 5 按防水配置＋挂脖使用。</p>
-                <div class="tags"><span class="tag intro">介绍</span><span class="tag warn">注意</span></div>
-              </div>
-            </div>
+<p>睡到自然醒也可以。浮潜不作为固定项目，看到海况好、临时想下水再决定。</p>
+<div class="tags"><span class="tag intro">介绍</span></div>
+</div>
+</div>
+<div class="timeline-item">
+<div class="time-col">12:00左右<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3>🍴 午餐＋收拾退房</h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day3-2" type="button">O 打卡</button></div>
 
-            <div class="timeline-item">
-              <div class="time-col">13:00–14:00<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3>🍜 午餐</h3>
-                <p>简单用餐、补水；现金提前装在防水袋里。</p>
-                <div class="tags"><span class="tag warn">注意</span></div>
-              </div>
-            </div>
+<p>检查房间：手机、充电宝、相机电池、护照、房卡和全部小物品。</p>
+<div class="tags"><span class="tag warn">注意</span></div>
+</div>
+</div>
+<div class="timeline-item">
+<div class="time-col">13:00左右<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&amp;query=Siquijor+Port+Philippines" target="_blank">🚗 Coco Grove → Siquijor Port</a></h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day3-3" type="button">O 打卡</button></div>
 
-            <div class="timeline-item">
-              <div class="time-col">14:00–14:25<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&query=Old+Enchanted+Balete+Tree+Siquijor" target="_blank">🛵 Cantabon Cave → Old Enchanted Balete Tree</a></h3>
-                <p>继续骑车前往老树。</p>
-                <div class="tags"><span class="tag nav">导航</span></div>
-                <div class="travel-pill">约10–12 km · 约20–25分钟</div>
-              </div>
-            </div>
+<p>按酒店送站安排预留机动时间。</p>
+<div class="tags"><span class="tag nav">导航</span></div>
+<div class="travel-pill">约10 km · 约20–25分钟</div>
+</div>
+</div>
+<div class="timeline-item">
+<div class="time-col">下午<div class="tz">PHT · UTC+8</div></div>
+<div class="event"><div class="event-top"><h3>🚢 OceanJet · Siquijor → Tagbilaran</h3><button aria-label="打卡" aria-pressed="false" class="checkin-btn" data-checkin="day3-4" type="button">O 打卡</button></div>
 
-            <div class="timeline-item">
-              <div class="time-col">14:25–15:05<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&query=Old+Enchanted+Balete+Tree+Siquijor" target="_blank">🌳 Old Enchanted Balete Tree</a></h3>
-                <p>巨型老榕树＋鱼疗；快速打卡，不再安排其他景点。</p>
-                <div class="tags"><span class="tag intro">介绍</span><span class="tag nav">导航</span></div>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="time-col">15:05–15:20<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&query=Coco+Grove+Beach+Resort+Siquijor" target="_blank">🛵 Balete Tree → Coco Grove</a></h3>
-                <p>回酒店，准备洗澡和休息。</p>
-                <div class="tags"><span class="tag nav">导航</span></div>
-                <div class="travel-pill">约7–8 km · 约13–15分钟</div>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="time-col">15:30+<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&query=Coco+Grove+Beach+Resort+Siquijor" target="_blank">🏝️ Coco Grove · 洗澡＋躺平</a></h3>
-                <p>洗澡、换干衣服、泳池、沙滩、午睡、晚餐、看日落。</p>
-                <div class="tags"><span class="tag intro">介绍</span></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="stay">
-            <strong>🏠 当日住宿</strong>
-            <span>Coco Grove Beach Resort · Casa Coco, Siquijor Circumferential Rd, Tubod, San Juan</span>
-          </div>
-        </div>
-      </details>
-
-      <!-- DAY 2 -->
-      <details class="card day-card day2" data-day="2026-10-04">
-        <summary class="day-summary">
-          <div class="day-num">10/4</div>
-          <div class="day-title">
-            <strong>先拍照 → 再玩水 📸💦</strong>
-            <small>Pitogo → Salagdoong（拍照/无人机）→ Cambugahay → 回酒店还车</small>
-          </div>
-          <div class="progress">
-            <div class="progress-top"><span>打卡进度</span><span>0 / 6</span></div>
-            <div class="progress-bar"><div class="progress-fill"></div></div>
-          </div>
-          <div class="chev">⌄</div>
-        </summary>
-        <div class="day-body">
-          <div class="route-tools">
-            <div class="left">🏠 住宿：Coco Grove Beach Resort</div>
-
-          <div class="day-reminder">
-            <div class="reminder-head">
-              <div class="reminder-title"><span class="icon">✦</span>当天提醒 · 先看这个</div>
-              <span class="reminder-badge">10/4 · 拍照＋玩水</span>
-            </div>
-            <div class="reminder-grid">
-              <div class="reminder-chip blue"><b>📷 相机整装</b><small>富士＋两支镜头＋备用电池＋存储卡＋镜头布</small></div>
-              <div class="reminder-chip coral"><b>☀ 防晒装备</b><small>防晒霜、防晒雨伞、防晒帽、墨镜；骑摩托会晒</small></div>
-              <div class="reminder-chip yellow"><b>🏨 房卡必带</b><small>与手机、少量现金放固定小袋</small></div>
-              <div class="reminder-chip peach"><b>🚁 Salagdoong先拍</b><small>无人机＋人物大片先完成；跳水不设为硬任务</small></div>
-              <div class="reminder-chip lav"><b>💦 下水前收设备</b><small>进 Cambugahay 前收好所有非防水贵重设备</small></div>
-              <div class="reminder-chip blue"><b>🛵 最后要还车</b><small>回 Coco Grove 还车，确认钥匙、头盔、押金</small></div>
-            </div>
-          </div>
-
-            <button class="map-button" onclick="openDayRoute('day2')">↗ 打开全天多点导航</button>
-          </div>
-          <div class="day-map">
-            <svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg">
-              <path d="M82 142 Q190 70 320 104 T635 64 T770 137 Q655 157 560 180 Q410 202 270 160"
-                    fill="none" stroke="#d59b72" stroke-width="10" stroke-linecap="round" stroke-dasharray="1 13"/>
-              <circle cx="82" cy="142" r="13" fill="#fff" stroke="#87b9e7" stroke-width="3"/>
-              <circle cx="280" cy="104" r="10" fill="#fff" stroke="#d59b72" stroke-width="3"/>
-              <circle cx="635" cy="64" r="10" fill="#fff" stroke="#d59b72" stroke-width="3"/>
-              <circle cx="560" cy="180" r="10" fill="#fff" stroke="#d59b72" stroke-width="3"/>
-              <circle cx="270" cy="160" r="13" fill="#fff" stroke="#87b9e7" stroke-width="3"/>
-              <text x="60" y="176" font-size="14" fill="#718198">Coco Grove</text>
-              <text x="246" y="82" font-size="14" fill="#7a91ab">Pitogo</text>
-              <text x="608" y="39" font-size="14" fill="#7a91ab">Salagdoong</text>
-              <text x="532" y="205" font-size="14" fill="#7a91ab">Cambugahay</text>
-              <text x="248" y="188" font-size="14" fill="#6b8fb2">回酒店</text>
-            </svg>
-          </div>
-
-          <div class="timeline">
-            <div class="timeline-item">
-              <div class="time-col">07:00–07:45<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3>☕ 早餐＋💄 化妆＋整理摄影包</h3>
-                <p>今天先拍照。相机、两支镜头、备用电池、存储卡、镜头布提前带齐。</p>
-                <div class="tags"><span class="tag warn">注意</span><span class="tag intro">介绍</span></div>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="time-col">07:45–07:50<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&query=Pitogo+Cliff+Nature+Park+Siquijor" target="_blank">🛵 Coco Grove → Pitogo Cliff</a></h3>
-                <p>近距离第一站，先完成干净妆发的人像照片。</p>
-                <div class="tags"><span class="tag nav">导航</span></div>
-                <div class="travel-pill">约2.6 km · 约3–5分钟</div>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="time-col">07:50–08:50<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&query=Pitogo+Cliff+Nature+Park+Siquijor" target="_blank">📸 Pitogo Cliff</a></h3>
-                <p>悬崖、礁石、蓝海、人像＋无人机素材；保持妆发完整。</p>
-                <div class="tags"><span class="tag intro">介绍</span><span class="tag nav">导航</span></div>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="time-col">08:50–09:25<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&query=Salagdoong+Beach+Siquijor" target="_blank">🛵 Pitogo Cliff → Salagdoong Beach</a></h3>
-                <p>一路防晒、补水；到海边后先拍，不跳水。</p>
-                <div class="tags"><span class="tag nav">导航</span></div>
-                <div class="travel-pill">约36–38 km · 约30–35分钟</div>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="time-col">09:25–10:45<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&query=Salagdoong+Beach+Siquijor" target="_blank">🚁 Salagdoong Beach · 海边写真</a></h3>
-                <p>悬崖、跳台、蓝海、人像和无人机素材。<b>跳水不列为固定项目</b>，有时间且条件合适再自由决定。</p>
-                <div class="tags"><span class="tag intro">介绍</span><span class="tag warn">注意</span><span class="tag nav">导航</span></div>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="time-col">10:45–11:15<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&query=Cambugahay+Falls+Siquijor" target="_blank">🛵 Salagdoong → Cambugahay Falls</a></h3>
-                <p>向 Lazi 方向返回，开始进入玩水阶段。</p>
-                <div class="tags"><span class="tag nav">导航</span></div>
-                <div class="travel-pill">约15–18 km · 约20–25分钟</div>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="time-col">11:15–13:15<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&query=Cambugahay+Falls+Siquijor" target="_blank">💦 Cambugahay Falls</a></h3>
-                <p>树藤荡水、跳入水潭、瀑布池。下水前收好富士相机、镜头、无人机等非防水设备。</p>
-                <div class="tags"><span class="tag intro">介绍</span><span class="tag warn">注意</span></div>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="time-col">13:15–14:00<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3>🍜 午餐＋补水</h3>
-                <p>简单吃，补足水分。</p>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="time-col">14:00–14:30<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&query=Coco+Grove+Beach+Resort+Siquijor" target="_blank">🛵 Cambugahay Falls → Coco Grove</a></h3>
-                <p>回酒店后直接还车。</p>
-                <div class="tags"><span class="tag nav">导航</span></div>
-                <div class="travel-pill">约14.6 km · 约28–30分钟</div>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="time-col">14:30–15:00<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3>🛵 还摩托车</h3>
-                <p>归还车辆、2顶头盔、车钥匙；确认押金退还方式，并检查个人物品。</p>
-                <div class="tags"><span class="tag book">需提前确认</span><span class="tag warn">注意</span></div>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="time-col">15:00+<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&query=Coco+Grove+Beach+Resort+Siquijor" target="_blank">🏨 Coco Grove · 洗澡＋躺平</a></h3>
-                <p>今天不再安排外出。</p>
-                <div class="tags"><span class="tag intro">介绍</span></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="stay">
-            <strong>🏠 当日住宿</strong>
-            <span>Coco Grove Beach Resort · Casa Coco, Siquijor Circumferential Rd, Tubod, San Juan</span>
-          </div>
-        </div>
-      </details>
-
-      <!-- DAY 3 -->
-      <details class="card day-card day3" data-day="2026-10-05">
-        <summary class="day-summary">
-          <div class="day-num">10/5</div>
-          <div class="day-title">
-            <strong>Coco Grove 躺平日 🏝️</strong>
-            <small>沙滩＋泳池 → 午餐 → 收拾 → Siquijor Port → OceanJet</small>
-          </div>
-          <div class="progress">
-            <div class="progress-top"><span>打卡进度</span><span>0 / 4</span></div>
-            <div class="progress-bar"><div class="progress-fill"></div></div>
-          </div>
-          <div class="chev">⌄</div>
-        </summary>
-        <div class="day-body">
-          <div class="route-tools">
-            <div class="left">🏠 上午仍住 Coco Grove · 下午离岛</div>
-
-          <div class="day-reminder">
-            <div class="reminder-head">
-              <div class="reminder-title"><span class="icon">♡</span>当天提醒 · 先看这个</div>
-              <span class="reminder-badge">10/5 · 慢慢离岛</span>
-            </div>
-            <div class="reminder-grid">
-              <div class="reminder-chip blue"><b>🏝️ 不安排浮潜</b><small>沙滩、泳池、发呆为主；想下水再临时决定</small></div>
-              <div class="reminder-chip coral"><b>🧳 退房检查</b><small>护照、手机、充电宝、相机电池、房卡、小物品</small></div>
-              <div class="reminder-chip yellow"><b>🚢 船期</b><small>OceanJet 正式班次以票面/官方信息为准</small></div>
-              <div class="reminder-chip peach"><b>⏰ 提前去港口</b><small>按正式船班倒推酒店送站时间</small></div>
-              <div class="reminder-chip blue"><b>☕ 不赶景点</b><small>上午不安排远距离目的地，留给 Coco Grove</small></div>
-              <div class="reminder-chip lav"><b>📍 导航</b><small>Coco Grove → 港口约10 km，约20–25分钟</small></div>
-            </div>
-          </div>
-
-            <button class="map-button" onclick="openDayRoute('day3')">↗ 打开全天多点导航</button>
-          </div>
-          <div class="day-map">
-            <svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg">
-              <path d="M130 120 Q340 54 560 98 T830 132" fill="none" stroke="#76aee4" stroke-width="10" stroke-linecap="round" stroke-dasharray="1 13"/>
-              <circle cx="130" cy="120" r="13" fill="#fff" stroke="#87b9e7" stroke-width="3"/>
-              <circle cx="830" cy="132" r="13" fill="#fff" stroke="#76aee4" stroke-width="3"/>
-              <text x="104" y="154" font-size="14" fill="#6b8fb2">Coco Grove</text>
-              <text x="765" y="166" font-size="14" fill="#638fbf">Siquijor Port</text>
-              <text x="330" y="67" font-size="14" fill="#8090a5">沙滩 · 泳池 · 午餐</text>
-            </svg>
-          </div>
-
-          <div class="timeline">
-            <div class="timeline-item">
-              <div class="time-col">上午<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&query=Coco+Grove+Beach+Resort+Siquijor" target="_blank">🥐 早餐 → 沙滩 → 泳池</a></h3>
-                <p>睡到自然醒也可以。浮潜不作为固定项目，看到海况好、临时想下水再决定。</p>
-                <div class="tags"><span class="tag intro">介绍</span></div>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="time-col">12:00左右<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3>🍴 午餐＋收拾退房</h3>
-                <p>检查房间：手机、充电宝、相机电池、护照、房卡和全部小物品。</p>
-                <div class="tags"><span class="tag warn">注意</span></div>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="time-col">13:00左右<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3><a class="nav-link" href="https://www.google.com/maps/search/?api=1&query=Siquijor+Port+Philippines" target="_blank">🚗 Coco Grove → Siquijor Port</a></h3>
-                <p>按酒店送站安排预留机动时间。</p>
-                <div class="tags"><span class="tag nav">导航</span></div>
-                <div class="travel-pill">约10 km · 约20–25分钟</div>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="time-col">下午<div class="tz">PHT · UTC+8</div></div>
-              <div class="event">
-                <h3>🚢 OceanJet · Siquijor → Tagbilaran</h3>
-                <p>暂按往年约 14:30–16:30 时段预留；正式班次以 OceanJet 官方票面为准。</p>
-                <div class="tags"><span class="tag">航班</span><span class="tag warn">待正式船期</span></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="stay">
-            <strong>🏠 上午住宿</strong>
-            <span>Coco Grove Beach Resort · 午餐后退房，前往 Siquijor Port</span>
-          </div>
-        </div>
-      </details>
-
-    </div>
-  </section>
-
-  <!-- 5. 待办清单 -->
-  <section class="section">
-    <div class="section-title">
-      <h2>待办清单</h2>
-      <div class="section-kicker">纯列表 · 不使用浏览器勾选</div>
-    </div>
-    <div class="card todo-list">
-      <div class="todo-item">
-        <div class="todo-dot"></div>
-        <div>确认 OceanJet 10/3 去程、10/5 回程正式班次与票面时间。<small>优先级最高 · 时间一出就更新倒计时</small></div>
-      </div>
-      <div class="todo-item">
-        <div class="todo-dot"></div>
-        <div>询问 Coco Grove 双人 scooter 价格、车型、2顶头盔、车锁、是否有后置箱，以及 10/4 最晚还车时间。<small>10/3 到店取车前确认</small></div>
-      </div>
-      <div class="todo-item">
-        <div class="todo-dot"></div>
-        <div>如果酒店租车价格/还车时间不合适，再联系 CASSIOPEIA 或 Boogie。<small>CASSIOPEIA 目前公开营业至 21:00；Boogie 显示 24h</small></div>
-      </div>
-      <div class="todo-item">
-        <div class="todo-dot"></div>
-        <div>确认 Cantabon Cave 10/3 是否因降雨、水位或天气影响而调整。<small>当天早上再次确认</small></div>
-      </div>
-      <div class="todo-item">
-        <div class="todo-dot"></div>
-        <div>确认 Salagdoong 10/4 的无人机拍摄是否有现场服务、价格和拍摄内容。<small>把它当拍照项目，不把跳水设为硬任务</small></div>
-      </div>
-      <div class="todo-item">
-        <div class="todo-dot"></div>
-        <div>10/3 提前准备当天现金并放进防水袋；剩余大额现金留酒店。<small>进洞后不要临时找地方放东西</small></div>
-      </div>
-      <div class="todo-item">
-        <div class="todo-dot"></div>
-        <div>准备 10/3 防水装备：手机防水袋、Action 5 防水＋挂脖、蚊虫喷雾、防晒、一次性可擦干浴巾/擦水巾、水鞋、换洗衣物。<small>贵重非防水设备留在酒店</small></div>
-      </div>
-      <div class="todo-item">
-        <div class="todo-dot"></div>
-        <div>准备 10/4 摄影包：富士相机＋两支镜头＋电池＋存储卡＋镜头布；防晒雨伞、防晒帽、房卡、手机、饮用水。<small>骑摩托会晒，出门前完成防晒</small></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 6. 实用贴士 -->
-  <section class="section">
-    <div class="section-title">
-      <h2>实用贴士</h2>
-      <div class="section-kicker">给这趟锡岛旅程留一点余地</div>
-    </div>
-    <div class="tips">
-      <article class="card tip">
-        <h3>🛵 双人摩托</h3>
-        <p>目标 125cc 自动挡。当地 2026 常见 scooter 约 ₱350–500/天；公开参考中 Honda Click 125 V4 约 ₱450/天。燃油另计。</p>
-      </article>
-      <article class="card tip">
-        <h3>🔐 车辆储物</h3>
-        <p>座椅下/后置箱只是普通储物空间，不是保险箱。富士、无人机、Pocket 3 等贵重设备不建议长时间留在无人看管的车上。</p>
-      </article>
-      <article class="card tip">
-        <h3>💧 10/3 防水</h3>
-        <p>Cantabon 是涉水型洞穴玩法。手机、现金等需要防水；不要把相机、无人机等非防水设备带进洞。</p>
-      </article>
-      <article class="card tip">
-        <h3>☀️ 10/4 防晒</h3>
-        <p>骑摩托路段长，防晒雨伞、帽子、防晒霜和饮用水都要随身。拍照设备提前充满电。</p>
-      </article>
-      <article class="card tip">
-        <h3>🌊 Salagdoong</h3>
-        <p>本次主任务是海边悬崖＋无人机照片，跳水只作为现场有时间、海况合适时的可选项目。</p>
-      </article>
-      <article class="card tip">
-        <h3>⏰ 时区</h3>
-        <p>所有固定时间按 PHT（UTC+8）保存，倒计时使用带 UTC 偏移的绝对时间计算；人在英国、中国或菲律宾打开都不会因浏览器时区误算。</p>
-      </article>
-    </div>
-
-    <div class="source-note">
+<p>暂按往年约 14:30–16:30 时段预留；正式班次以 OceanJet 官方票面为准。</p>
+<div class="tags"><span class="tag">航班</span><span class="tag warn">待正式船期</span></div>
+</div>
+</div>
+</div>
+<div class="stay">
+<strong>🏠 上午住宿</strong>
+<span>Coco Grove Beach Resort · 午餐后退房，前往 Siquijor Port</span>
+</div>
+</div>
+</details>
+</div>
+</section>
+<!-- 5. 待办清单 -->
+<section class="section">
+<div class="section-title">
+<h2>待办清单</h2>
+<div class="section-kicker">纯列表 · 不使用浏览器勾选</div>
+</div>
+<div class="card todo-list">
+<div class="todo-item">
+<div class="todo-dot"></div>
+<div>确认 OceanJet 10/3 去程、10/5 回程正式班次与票面时间。<small>优先级最高 · 时间一出就更新倒计时</small></div>
+</div>
+<div class="todo-item">
+<div class="todo-dot"></div>
+<div>询问 Coco Grove 双人 scooter 价格、车型、2顶头盔、车锁、是否有后置箱，以及 10/4 最晚还车时间。<small>10/3 到店取车前确认</small></div>
+</div>
+<div class="todo-item">
+<div class="todo-dot"></div>
+<div>如果酒店租车价格/还车时间不合适，再联系 CASSIOPEIA 或 Boogie。<small>CASSIOPEIA 目前公开营业至 21:00；Boogie 显示 24h</small></div>
+</div>
+<div class="todo-item">
+<div class="todo-dot"></div>
+<div>确认 Cantabon Cave 10/3 是否因降雨、水位或天气影响而调整。<small>当天早上再次确认</small></div>
+</div>
+<div class="todo-item">
+<div class="todo-dot"></div>
+<div>确认 Salagdoong 10/4 的无人机拍摄是否有现场服务、价格和拍摄内容。<small>把它当拍照项目，不把跳水设为硬任务</small></div>
+</div>
+<div class="todo-item">
+<div class="todo-dot"></div>
+<div>10/3 提前准备当天现金并放进防水袋；剩余大额现金留酒店。<small>进洞后不要临时找地方放东西</small></div>
+</div>
+<div class="todo-item">
+<div class="todo-dot"></div>
+<div>准备 10/3 防水装备：手机防水袋、Action 5 防水＋挂脖、蚊虫喷雾、防晒、一次性可擦干浴巾/擦水巾、水鞋、换洗衣物。<small>贵重非防水设备留在酒店</small></div>
+</div>
+<div class="todo-item">
+<div class="todo-dot"></div>
+<div>准备 10/4 摄影包：富士相机＋两支镜头＋电池＋存储卡＋镜头布；防晒雨伞、防晒帽、房卡、手机、饮用水。<small>骑摩托会晒，出门前完成防晒</small></div>
+</div>
+</div>
+</section>
+<!-- 6. 实用贴士 -->
+<section class="section">
+<div class="section-title">
+<h2>实用贴士</h2>
+<div class="section-kicker">给这趟锡岛旅程留一点余地</div>
+</div>
+<div class="tips">
+<article class="card tip">
+<h3>🛵 双人摩托</h3>
+<p>目标 125cc 自动挡。当地 2026 常见 scooter 约 ₱350–500/天；公开参考中 Honda Click 125 V4 约 ₱450/天。燃油另计。</p>
+</article>
+<article class="card tip">
+<h3>🔐 车辆储物</h3>
+<p>座椅下/后置箱只是普通储物空间，不是保险箱。富士、无人机、Pocket 3 等贵重设备不建议长时间留在无人看管的车上。</p>
+</article>
+<article class="card tip">
+<h3>💧 10/3 防水</h3>
+<p>Cantabon 是涉水型洞穴玩法。手机、现金等需要防水；不要把相机、无人机等非防水设备带进洞。</p>
+</article>
+<article class="card tip">
+<h3>☀️ 10/4 防晒</h3>
+<p>骑摩托路段长，防晒雨伞、帽子、防晒霜和饮用水都要随身。拍照设备提前充满电。</p>
+</article>
+<article class="card tip">
+<h3>🌊 Salagdoong</h3>
+<p>本次主任务是海边悬崖＋无人机照片，跳水只作为现场有时间、海况合适时的可选项目。</p>
+</article>
+<article class="card tip">
+<h3>⏰ 时区</h3>
+<p>所有固定时间按 PHT（UTC+8）保存，倒计时使用带 UTC 偏移的绝对时间计算；人在英国、中国或菲律宾打开都不会因浏览器时区误算。</p>
+</article>
+</div>
+<div class="source-note">
       页面中的酒店联系方式来自 Coco Grove 官方；OceanJet 联系方式来自 OceanJet 官方；
       摩托车价格参考来自 2026 年 7 月核验的 SiquiRide 与当地租车指南。具体价格、班次、现场服务和景点收费仍以当天官方/商家确认为准。
     </div>
-  </section>
-
-  <div class="footer">
+</section>
+<div class="footer">
     Siquijor · 10.03—10.05 · PHT (UTC+8) · Google Maps 导航链接可直接打开
   </div>
 </div>
-
 <script>
 const EVENTS = [
   { at:"2026-10-03T07:30:00+08:00", title:"OceanJet · Tagbilaran → Siquijor", note:"暂按往年时段 · 待正式班次确认" },
@@ -1139,6 +1307,175 @@ function openDayRoute(day){
   if(waypoints) url += "&waypoints="+waypoints;
   window.open(url,"_blank","noopener,noreferrer");
 }
+
+
+
+/* ---- Final persistent check-in + modal interaction ---- */
+const CHECKIN_STORAGE_KEY = "siquijor_itinerary_checkins_v2";
+
+function getCheckins(){
+  try{
+    const raw = localStorage.getItem(CHECKIN_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : {};
+    return parsed && typeof parsed === "object" ? parsed : {};
+  }catch(e){
+    return {};
+  }
+}
+function saveCheckins(state){
+  try{ localStorage.setItem(CHECKIN_STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+}
+function setDone(item, done){
+  item.classList.toggle("is-done", done);
+  const btn = item.querySelector(".checkin-btn");
+  if(btn){
+    btn.textContent = done ? "✓ 已去过" : "O 打卡";
+    btn.setAttribute("aria-pressed", String(done));
+  }
+}
+function updateDayProgress(dayCard){
+  const items = [...dayCard.querySelectorAll(".timeline-item")];
+  const done = items.filter(item => item.classList.contains("is-done")).length;
+  const total = items.length;
+  const count = dayCard.querySelector(".progress-count");
+  if(count) count.textContent = `${done} / ${total}`;
+  const fill = dayCard.querySelector(".progress-fill");
+  if(fill) fill.style.width = total ? `${done/total*100}%` : "0%";
+}
+function initCheckins(){
+  const state = getCheckins();
+  document.querySelectorAll(".day-card").forEach(dayCard=>{
+    dayCard.querySelectorAll(".timeline-item").forEach(item=>{
+      const btn = item.querySelector(".checkin-btn");
+      if(!btn) return;
+      const id = btn.dataset.checkin;
+      setDone(item, !!state[id]);
+      btn.addEventListener("click", e=>{
+        e.preventDefault();
+        e.stopPropagation();
+        const nextDone = !item.classList.contains("is-done");
+        setDone(item, nextDone);
+        const updated = getCheckins();
+        if(nextDone) updated[id] = true;
+        else delete updated[id];
+        saveCheckins(updated);
+        updateDayProgress(dayCard);
+      });
+    });
+    updateDayProgress(dayCard);
+  });
+}
+initCheckins();
+
+const PLACE_DATA = {
+  "Cantabon Cave": {
+    reason:"想体验真正的锡岛洞穴探险，这里比普通观光洞更有参与感。",
+    must:"涉水洞段、钟乳石、洞穴内低矮／攀爬路段。",
+    tip:"穿水鞋＋速干衣；手机和现金防水；雨后先确认水位与是否适合进入。",
+    map:"https://www.google.com/maps/search/?api=1&query=Cantabon+Cave+Siquijor"
+  },
+  "Old Enchanted Balete Tree": {
+    reason:"用很少的时间看一处很有锡岛辨识度的老树与鱼疗。",
+    must:"巨大老榕树、树下鱼疗池。",
+    tip:"停留约30–40分钟即可；手机继续做好防水收纳。",
+    map:"https://www.google.com/maps/search/?api=1&query=Old+Enchanted+Balete+Tree+Siquijor"
+  },
+  "Pitogo Cliff": {
+    reason:"近酒店、海景开阔，适合把第一组干净妆发的人像大片拍完。",
+    must:"悬崖边、礁石、蓝海、下海阶梯和无人机视角。",
+    tip:"早上先拍人物，再决定是否靠近湿滑海边；注意锋利岩石。",
+    map:"https://www.google.com/maps/search/?api=1&query=Pitogo+Cliff+Nature+Park+Siquijor"
+  },
+  "Salagdoong Beach": {
+    reason:"把锡岛最有辨识度的海边悬崖与蓝海，一次拍成主视觉。",
+    must:"悬崖、跳台、蓝海、人像和无人机全景。",
+    tip:"本次以拍照为主，不把跳水列为硬任务；无人机服务、海况及现场开放情况当天确认。",
+    map:"https://www.google.com/maps/search/?api=1&query=Salagdoong+Beach+Siquijor"
+  },
+  "Cambugahay Falls": {
+    reason:"锡岛代表性的瀑布＋树藤体验，适合把“玩水”一次玩够。",
+    must:"树藤荡水、瀑布池、下水体验。",
+    tip:"放在拍照之后；下水前把富士、无人机等非防水设备收好。雨后注意水流。",
+    map:"https://www.google.com/maps/search/?api=1&query=Cambugahay+Falls+Siquijor"
+  },
+  "Coco Grove Beach Resort": {
+    reason:"这趟锡岛不只是打卡，Coco Grove 本身就是应该留时间享受的目的地。",
+    must:"沙滩、泳池、躺椅、酒店环境和日落。",
+    tip:"10/3 探洞回来和10/4还车后都留足休息时间，10/5上午也不赶景点。",
+    map:"https://www.google.com/maps/search/?api=1&query=Coco+Grove+Beach+Resort+Siquijor"
+  }
+};
+
+const placeModal = document.getElementById("placeModal");
+const modalPlaceName = document.getElementById("modalPlaceName");
+const modalReason = document.getElementById("modalReason");
+const modalMust = document.getElementById("modalMust");
+const modalTip = document.getElementById("modalTip");
+const modalMapButton = document.getElementById("modalMapButton");
+const modalClose = document.getElementById("modalClose");
+
+function openPlaceModal(key){
+  const d = PLACE_DATA[key];
+  if(!d || !placeModal) return;
+  modalPlaceName.textContent = key;
+  modalPlaceName.href = d.map;
+  modalReason.textContent = "一句话推荐：" + d.reason;
+  modalMust.textContent = d.must;
+  modalTip.textContent = d.tip;
+  modalMapButton.href = d.map;
+  placeModal.classList.add("is-open");
+  placeModal.setAttribute("aria-hidden","false");
+  document.body.style.overflow = "hidden";
+}
+function closePlaceModal(){
+  if(!placeModal) return;
+  placeModal.classList.remove("is-open");
+  placeModal.setAttribute("aria-hidden","true");
+  document.body.style.overflow = "";
+}
+document.querySelectorAll("[data-place]").forEach(el=>{
+  el.addEventListener("click", e=>{
+    e.preventDefault();
+    e.stopPropagation();
+    openPlaceModal(el.dataset.place);
+  });
+});
+if(modalClose) modalClose.addEventListener("click", closePlaceModal);
+if(placeModal){
+  placeModal.addEventListener("click", e=>{
+    if(e.target === placeModal) closePlaceModal();
+  });
+}
+document.addEventListener("keydown", e=>{
+  if(e.key === "Escape") closePlaceModal();
+});
 </script>
+<div aria-hidden="true" class="place-modal" id="placeModal">
+<div aria-labelledby="modalPlaceName" aria-modal="true" class="place-modal-panel" role="dialog">
+<div class="modal-head">
+<div class="modal-location-row">
+<a class="modal-place-link" href="#" id="modalPlaceName" rel="noopener" target="_blank">地点</a>
+<button aria-label="关闭" class="modal-close" id="modalClose" type="button">×</button>
+</div>
+<div class="modal-sub">点击地点名称可直接打开 Google Maps 导航</div>
+</div>
+<div class="modal-body">
+<div class="modal-reason" id="modalReason"></div>
+<div class="modal-sections">
+<div class="modal-section">
+<h4>必看点</h4>
+<p id="modalMust"></p>
+</div>
+<div class="modal-section">
+<h4>体验建议</h4>
+<p id="modalTip"></p>
+</div>
+</div>
+<div class="modal-map">
+<a href="#" id="modalMapButton" rel="noopener" target="_blank">↗ Google Maps 导航</a>
+</div>
+</div>
+</div>
+</div>
 </body>
 </html>
