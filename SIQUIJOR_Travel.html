@@ -6,7 +6,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Siquijor · 10.3—10.5 · 极简旅行 Dashboard · Baby Blue</title>
-<meta content="#f5f7f4" name="theme-color"/>
+<meta content="#eef5fa" name="theme-color"/>
 <style>
 :root{
   --bg:#f5f9ff;
@@ -30,6 +30,7 @@
   --night-ink:#e8f1fb;
   --night-muted:#a4b2c2;
   --night-line:#293747;
+  --card-bg:rgba(255,255,255,.88);
   --shadow:0 10px 30px rgba(68,106,145,.08);
   --radius:18px;
 }
@@ -37,11 +38,14 @@
 html{scroll-behavior:smooth}
 body{
   margin:0;
-  background:linear-gradient(180deg,#050608 0%,#0a1528 34%,#17385c 62%,#dce8f2 100%);
+  background:
+    radial-gradient(circle at 10% 6%, rgba(174,216,248,.32) 0, rgba(174,216,248,0) 24%),
+    radial-gradient(circle at 90% 12%, rgba(248,208,193,.18) 0, rgba(248,208,193,0) 20%),
+    linear-gradient(180deg,#f6fbff 0%,#edf5fb 42%,#f4f7fa 100%);
   color:var(--ink);
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Microsoft YaHei",sans-serif;
   line-height:1.65;
-  transition:background .35s,color .35s;
+  transition:background .55s ease,color .35s ease;
 }
 body.night{
   --bg:var(--night-bg);
@@ -49,14 +53,20 @@ body.night{
   --ink:var(--night-ink);
   --muted:var(--night-muted);
   --line:var(--night-line);
-  --soft:#1d2724;
-  --accent:#8ab7a8;
-  --accent-2:#263c35;
-  --accent-3:#7898b9;
-  --sand:#4a4033;
-  --blue-soft:#26323d;
-  --green-soft:#25382e;
-  --orange-soft:#403326;
+  --soft:#18283a;
+  --accent:#78b5ee;
+  --accent-2:#1c3652;
+  --accent-3:#6d9fd0;
+  --sand:#3a4653;
+  --blue-soft:#1b3148;
+  --green-soft:#213646;
+  --orange-soft:#47362b;
+  --card-bg:rgba(16,28,42,.92);
+  --shadow:0 12px 34px rgba(0,0,0,.24);
+  background:
+    radial-gradient(circle at 10% 8%, rgba(63,128,194,.18) 0, rgba(63,128,194,0) 25%),
+    radial-gradient(circle at 88% 18%, rgba(57,104,155,.14) 0, rgba(57,104,155,0) 22%),
+    linear-gradient(180deg,#050608 0%,#0a1628 36%,#102944 66%,#183c60 100%);
 }
 a{color:inherit;text-decoration:none}
 button{font:inherit}
@@ -94,7 +104,7 @@ button{font:inherit}
 }
 .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
 .card{
-  background:rgba(255,255,255,.88);
+  background:var(--card-bg);
   border:1px solid var(--line);
   border-radius:var(--radius);
   box-shadow:var(--shadow);
@@ -140,6 +150,62 @@ button{font:inherit}
   border:1px solid var(--line)
 }
 body.night .cd-box{background:rgba(255,255,255,.03)}
+body.night .mode-pill,
+body.night .mini-btn,
+body.night .map-button,
+body.night .checkin-btn,
+body.night .info-trigger,
+body.night .modal-close,
+body.night .reminder-chip,
+body.night .modal-head{
+  background:rgba(18,32,48,.94);
+  color:var(--ink);
+  border-color:#2d4964;
+}
+body.night .checkin-btn:hover{
+  border-color:#68aef0;
+  color:#bfe0ff;
+  background:#17324d;
+}
+body.night .timeline-item:hover{background:rgba(120,181,238,.08)}
+body.night .info-trigger{color:#8fc7fb}
+body.night .info-trigger:hover{background:#17324d;border-color:#5c9dd6}
+body.night .status.confirmed,
+body.night .tag.book{background:#173452;color:#a9d1f5}
+body.night .status.pending,
+body.night .tag.warn{background:#3d3028;color:#e1b994}
+body.night .tag.nav{background:#17324d;color:#a4ccef}
+body.night .tag.intro{background:#213a54;color:#a6c9e8}
+body.night .travel-pill{background:#1c3652;color:#8fc2f3}
+body.night .modal-reason{background:linear-gradient(135deg,#17324d,#263223);border-color:#304a62}
+body.night .modal-map a{background:#173451;border-color:#31587b;color:#9ec8ed}
+/* --- Final readability: night reminder stays dark + high-contrast, no green cast --- */
+body.night .day-reminder{
+  background:linear-gradient(135deg,#0e1b2b 0%,#12263c 52%,#173550 100%);
+  border-color:#294761;
+  box-shadow:0 9px 26px rgba(0,0,0,.24);
+  color:#edf6ff;
+}
+body.night .day-reminder .reminder-title{color:#edf6ff;}
+body.night .day-reminder .reminder-title .icon{
+  background:#1d3b58;color:#a9d8ff;border:1px solid #315674;
+}
+body.night .day-reminder .reminder-badge{
+  background:#28364b;color:#c8ddf3;border-color:#3c5875;
+}
+body.night .day-reminder .reminder-chip{
+  background:#13283e;color:#edf6ff;border-color:#2b4963;
+}
+body.night .day-reminder .reminder-chip b{color:#f3f8ff;}
+body.night .day-reminder .reminder-chip small{color:#b9cce1;}
+body.night .day-reminder .reminder-chip.blue{background:#15324b;border-color:#2e5879;}
+body.night .day-reminder .reminder-chip.coral{background:#302a35;border-color:#4d4459;}
+body.night .day-reminder .reminder-chip.yellow{background:#302f29;border-color:#555341;}
+body.night .day-reminder .reminder-chip.peach{background:#322d2a;border-color:#54483e;}
+body.night .day-reminder .reminder-chip.lav{background:#2d2e43;border-color:#4a4968;}
+body.night .modal-reason{background:linear-gradient(135deg,#17324d,#1b3550);border-color:#304a62;color:#eaf4ff;}
+body.night .modal-section p{color:#b9cbe0;}
+
 .cd-num{font-size:26px;font-weight:800;line-height:1}
 .cd-unit{font-size:10px;color:var(--muted);margin-top:4px}
 .small-note{font-size:11px;color:var(--muted);margin-top:10px}
@@ -380,9 +446,9 @@ body.night .day-map{background:#111a26}
 }
 .checkin-btn{
   flex:none;
-  border:1px solid #d8e6f4;
-  background:#fff;
-  color:#6a7e96;
+  border:1px solid #cfe2f3;
+  background:#fafdff;
+  color:#58718b;
   border-radius:999px;
   min-height:31px;
   padding:5px 10px;
@@ -563,9 +629,9 @@ body.night .day-map{background:#111a26}
 .event-top h3{flex:1;min-width:0}
 .checkin-btn{
   flex:none;
-  border:1px solid #d8e6f4;
-  background:#fff;
-  color:#6a7e96;
+  border:1px solid #cfe2f3;
+  background:#fafdff;
+  color:#58718b;
   border-radius:999px;
   min-height:31px;
   padding:5px 10px;
@@ -574,19 +640,19 @@ body.night .day-map{background:#111a26}
   white-space:nowrap;
   transition:all .2s ease;
 }
-.checkin-btn:hover{border-color:#8dbbe9;color:#5b85ae;background:#f5faff}
+.checkin-btn:hover{border-color:#79addc;color:#4f7fa9;background:#f2f8fe}
 .timeline-item.is-done{opacity:.4}
-.timeline-item.is-done .checkin-btn{background:#eaf5ff;border-color:#b9d7f2;color:#5d91c2;font-weight:750}
+.timeline-item.is-done .checkin-btn{background:#e8f4ff;border-color:#b9d7f2;color:#4f86b7;font-weight:750}
 .timeline-item.is-done h3{text-decoration:line-through;text-decoration-thickness:1px}
 .place-title-link{cursor:pointer}
 .info-trigger{
   display:inline-flex;align-items:center;justify-content:center;
   width:20px;height:20px;margin-left:6px;
-  border:1px solid #d9e7f4;border-radius:50%;
-  color:#6f9dca;background:#f3f9ff;font-size:11px;
+  border:1px solid #cfe2f3;border-radius:50%;
+  color:#5f91bf;background:#f1f8fe;font-size:11px;
   vertical-align:middle;cursor:pointer;
 }
-.info-trigger:hover{background:#e6f3ff;border-color:#afd0ed}
+.info-trigger:hover{background:#e5f2ff;border-color:#9fc7e8}
 .progress-count{font-variant-numeric:tabular-nums}
 </style>
 </head>
@@ -660,23 +726,41 @@ body.night .day-map{background:#111a26}
 <text fill="#5c82aa" font-size="16" font-weight="700" x="247" y="300">Coco Grove × 3日</text>
 <!-- labels -->
 <g font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
-<g transform="translate(805 132)">
-<circle fill="#76aee4" r="8"></circle><text fill="#6c7f96" font-size="15" x="15" y="5">Siquijor Port</text>
+<g transform="translate(805 132)" aria-label="Siquijor Port icon">
+  <path d="M-11 4 Q0 8 11 4 L8 9 L-8 9 Z" fill="#76aee4" stroke="#4f7fae" stroke-width="1.8" stroke-linejoin="round"></path>
+  <path d="M-3 3 L-3 -8 L8 -1" fill="none" stroke="#4f7fae" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+  <path d="M-2 -6 L6 0 L-2 0 Z" fill="#cfe6fb" stroke="#4f7fae" stroke-width="1.2"></path>
+  <text fill="#6c7f96" font-size="15" x="17" y="5">Siquijor Port</text>
 </g>
-<g transform="translate(616 214)">
-<circle fill="#88b8e8" r="7"></circle><text fill="#6c7f96" font-size="15" x="14" y="5">Cantabon Cave</text>
+<g transform="translate(616 214)" aria-label="Cantabon Cave icon">
+  <path d="M-11 8 Q-9 -8 0 -10 Q9 -8 11 8 Z" fill="#dbeaf8" stroke="#5d85a8" stroke-width="1.8"></path>
+  <path d="M-7 -1 Q-3 -5 0 -1 Q3 -5 7 -1" fill="none" stroke="#5d85a8" stroke-width="1.7" stroke-linecap="round"></path>
+  <path d="M-7 -7 l4 -4 l3 4 l-3 2 Z M1 -7 l4 -4 l3 4 l-3 2 Z" fill="#6f9ec7"></path>
+  <text fill="#6c7f96" font-size="15" x="16" y="5">Cantabon Cave</text>
 </g>
-<g transform="translate(470 302)">
-<circle fill="#88b8e8" r="7"></circle><text fill="#6c7f96" font-size="15" x="14" y="5">Balete Tree</text>
+<g transform="translate(470 302)" aria-label="Balete Tree icon">
+  <path d="M0 10 L0 -2 M0 2 L-7 -4 M0 2 L7 -4" fill="none" stroke="#668eaf" stroke-width="2.5" stroke-linecap="round"></path>
+  <circle cx="0" cy="-6" r="7" fill="#bcd8ea" stroke="#668eaf" stroke-width="1.6"></circle>
+  <circle cx="-7" cy="-3" r="4.5" fill="#cce3ef" stroke="#668eaf" stroke-width="1.3"></circle>
+  <circle cx="7" cy="-3" r="4.5" fill="#cce3ef" stroke="#668eaf" stroke-width="1.3"></circle>
+  <text fill="#6c7f96" font-size="15" x="16" y="5">Balete Tree</text>
 </g>
-<g transform="translate(446 188)">
-<circle fill="#d59b72" r="7"></circle><text fill="#6e573f" font-size="15" x="14" y="5">Pitogo Cliff</text>
+<g transform="translate(446 188)" aria-label="Pitogo Cliff icon">
+  <path d="M-12 9 L-3 -7 L2 0 L7 -5 L12 9 Z" fill="#ead7c7" stroke="#a97a59" stroke-width="1.8" stroke-linejoin="round"></path>
+  <path d="M-9 10 Q0 6 9 10" fill="none" stroke="#76aee4" stroke-width="2" stroke-linecap="round"></path>
+  <circle cx="6" cy="-9" r="2.2" fill="#f6d889"></circle>
+  <text fill="#6e573f" font-size="15" x="17" y="5">Pitogo Cliff</text>
 </g>
-<g transform="translate(721 246)">
-<circle fill="#d59b72" r="7"></circle><text fill="#6e573f" font-size="15" x="-8" y="25">Salagdoong</text>
+<g transform="translate(721 246)" aria-label="Salagdoong diving point icon">
+  <circle cx="-4" cy="-9" r="2.7" fill="#8aa9c6"></circle>
+  <path d="M-4 -6 L0 0 L7 2 M-1 -3 L-8 1 M0 0 L-4 7 M7 2 L12 0" fill="none" stroke="#5d86ab" stroke-width="1.8" stroke-linecap="round"></path>
+  <path d="M-13 9 Q-7 3 -1 9 M-3 10 Q3 4 9 10 M7 9 Q12 5 16 9" fill="none" stroke="#76aee4" stroke-width="2" stroke-linecap="round"></path>
+  <text fill="#6e573f" font-size="15" x="-10" y="25">Salagdoong</text>
 </g>
-<g transform="translate(607 345)">
-<circle fill="#d59b72" r="7"></circle><text fill="#6e573f" font-size="15" x="14" y="5">Cambugahay</text>
+<g transform="translate(607 345)" aria-label="Cambugahay Falls icon">
+  <path d="M-10 -8 Q-3 -4 -9 1 Q-3 6 -8 10 M0 -9 Q7 -4 1 1 Q7 6 2 10 M10 -8 Q3 -4 9 1 Q3 6 8 10" fill="none" stroke="#6ea9c8" stroke-width="2" stroke-linecap="round"></path>
+  <path d="M-12 11 Q0 6 12 11" fill="none" stroke="#76aee4" stroke-width="2.2" stroke-linecap="round"></path>
+  <text fill="#6e573f" font-size="15" x="17" y="5">Cambugahay</text>
 </g>
 </g>
 <g font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif">
@@ -800,11 +884,11 @@ body.night .day-map{background:#111a26}
 <div class="day-map">
 <svg viewbox="0 0 900 220" xmlns="http://www.w3.org/2000/svg">
 <path d="M80 150 Q210 72 345 122 T620 88 T820 145" fill="none" stroke="#88b8e8" stroke-dasharray="1 13" stroke-linecap="round" stroke-width="10"></path>
-<circle cx="80" cy="150" fill="#fff" r="13" stroke="#76aee4" stroke-width="3"></circle>
-<circle cx="210" cy="105" fill="#fff" r="10" stroke="#88b8e8" stroke-width="3"></circle>
-<circle cx="470" cy="120" fill="#fff" r="10" stroke="#88b8e8" stroke-width="3"></circle>
-<circle cx="650" cy="89" fill="#fff" r="10" stroke="#88b8e8" stroke-width="3"></circle>
-<circle cx="820" cy="145" fill="#fff" r="13" stroke="#87b9e7" stroke-width="3"></circle>
+<g transform="translate(80 150)"><path d="M-11 4 Q0 8 11 4 L8 9 L-8 9 Z" fill="#76aee4" stroke="#4f7fae" stroke-width="1.8"></path><path d="M-3 3 L-3 -8 L8 -1" fill="none" stroke="#4f7fae" stroke-width="1.8" stroke-linecap="round"></path></g>
+<g transform="translate(210 105)"><path d="M-9 0 L0 -8 L9 0 L9 8 L-9 8 Z" fill="#eaf5ff" stroke="#6e9dca" stroke-width="1.8" stroke-linejoin="round"></path><path d="M-2 8 L-2 2 L2 2 L2 8" fill="none" stroke="#6e9dca" stroke-width="1.6"></path></g>
+<g transform="translate(470 120)"><path d="M-10 7 Q-8 -6 0 -8 Q8 -6 10 7 Z" fill="#dbeaf8" stroke="#5d85a8" stroke-width="1.8"></path><path d="M-5 -1 Q0 -5 5 -1" fill="none" stroke="#5d85a8" stroke-width="1.5" stroke-linecap="round"></path><path d="M-6 -5 l3 -3 l2 3 l-2 1 Z M1 -5 l3 -3 l2 3 l-2 1 Z" fill="#6f9ec7"></path></g>
+<g transform="translate(650 89)"><path d="M0 9 L0 -2 M0 3 L-6 -4 M0 3 L6 -4" fill="none" stroke="#668eaf" stroke-width="2.5" stroke-linecap="round"></path><circle cx="0" cy="-6" r="7" fill="#bcd8ea" stroke="#668eaf" stroke-width="1.5"></circle><circle cx="-6" cy="-3" r="4" fill="#cce3ef"></circle><circle cx="6" cy="-3" r="4" fill="#cce3ef"></circle></g>
+<g transform="translate(820 145)"><path d="M-10 4 Q0 8 10 4 L7 9 L-7 9 Z" fill="#eaf5ff" stroke="#6e9dca" stroke-width="1.7"></path><path d="M-2 4 L-2 -7 L7 -1" fill="none" stroke="#6e9dca" stroke-width="1.7" stroke-linecap="round"></path></g>
 <text fill="#718198" font-size="14" x="59" y="184">Siquijor Port</text>
 <text fill="#6b8fb2" font-size="14" x="184" y="82">Coco Grove</text>
 <text fill="#6b8fb2" font-size="14" x="435" y="99">Cantabon</text>
@@ -932,11 +1016,11 @@ body.night .day-map{background:#111a26}
 <div class="day-map">
 <svg viewbox="0 0 900 220" xmlns="http://www.w3.org/2000/svg">
 <path d="M82 142 Q190 70 320 104 T635 64 T770 137 Q655 157 560 180 Q410 202 270 160" fill="none" stroke="#d59b72" stroke-dasharray="1 13" stroke-linecap="round" stroke-width="10"></path>
-<circle cx="82" cy="142" fill="#fff" r="13" stroke="#87b9e7" stroke-width="3"></circle>
-<circle cx="280" cy="104" fill="#fff" r="10" stroke="#d59b72" stroke-width="3"></circle>
-<circle cx="635" cy="64" fill="#fff" r="10" stroke="#d59b72" stroke-width="3"></circle>
-<circle cx="560" cy="180" fill="#fff" r="10" stroke="#d59b72" stroke-width="3"></circle>
-<circle cx="270" cy="160" fill="#fff" r="13" stroke="#87b9e7" stroke-width="3"></circle>
+<g transform="translate(82 142)"><path d="M-9 0 L0 -8 L9 0 L9 8 L-9 8 Z" fill="#eaf5ff" stroke="#6e9dca" stroke-width="1.8" stroke-linejoin="round"></path><path d="M-2 8 L-2 2 L2 2 L2 8" fill="none" stroke="#6e9dca" stroke-width="1.6"></path></g>
+<g transform="translate(280 104)"><path d="M-11 8 L-3 -6 L2 0 L7 -5 L11 8 Z" fill="#ead7c7" stroke="#a97a59" stroke-width="1.8" stroke-linejoin="round"></path><path d="M-9 9 Q0 5 9 9" fill="none" stroke="#76aee4" stroke-width="1.9" stroke-linecap="round"></path></g>
+<g transform="translate(635 64)"><circle cx="-4" cy="-8" r="2.5" fill="#8aa9c6"></circle><path d="M-4 -5 L0 0 L6 2 M0 -2 L-7 1 M0 0 L-4 7 M6 2 L11 0" fill="none" stroke="#5d86ab" stroke-width="1.7" stroke-linecap="round"></path><path d="M-12 9 Q-6 3 0 9 M-3 10 Q3 4 9 10" fill="none" stroke="#76aee4" stroke-width="2" stroke-linecap="round"></path></g>
+<g transform="translate(560 180)"><path d="M-10 -8 Q-3 -4 -9 1 Q-3 6 -8 10 M0 -9 Q7 -4 1 1 Q7 6 2 10 M10 -8 Q3 -4 9 1 Q3 6 8 10" fill="none" stroke="#6ea9c8" stroke-width="2" stroke-linecap="round"></path><path d="M-11 11 Q0 7 11 11" fill="none" stroke="#76aee4" stroke-width="2" stroke-linecap="round"></path></g>
+<g transform="translate(270 160)"><path d="M-9 0 L0 -8 L9 0 L9 8 L-9 8 Z" fill="#eaf5ff" stroke="#6e9dca" stroke-width="1.8" stroke-linejoin="round"></path><path d="M-2 8 L-2 2 L2 2 L2 8" fill="none" stroke="#6e9dca" stroke-width="1.6"></path></g>
 <text fill="#718198" font-size="14" x="60" y="176">Coco Grove</text>
 <text fill="#7a91ab" font-size="14" x="246" y="82">Pitogo</text>
 <text fill="#7a91ab" font-size="14" x="608" y="39">Salagdoong</text>
@@ -1079,8 +1163,8 @@ body.night .day-map{background:#111a26}
 <div class="day-map">
 <svg viewbox="0 0 900 220" xmlns="http://www.w3.org/2000/svg">
 <path d="M130 120 Q340 54 560 98 T830 132" fill="none" stroke="#76aee4" stroke-dasharray="1 13" stroke-linecap="round" stroke-width="10"></path>
-<circle cx="130" cy="120" fill="#fff" r="13" stroke="#87b9e7" stroke-width="3"></circle>
-<circle cx="830" cy="132" fill="#fff" r="13" stroke="#76aee4" stroke-width="3"></circle>
+<g transform="translate(130 120)"><path d="M-9 0 L0 -8 L9 0 L9 8 L-9 8 Z" fill="#eaf5ff" stroke="#6e9dca" stroke-width="1.8" stroke-linejoin="round"></path><path d="M-2 8 L-2 2 L2 2 L2 8" fill="none" stroke="#6e9dca" stroke-width="1.6"></path></g>
+<g transform="translate(830 132)"><path d="M-11 4 Q0 8 11 4 L8 9 L-8 9 Z" fill="#76aee4" stroke="#4f7fae" stroke-width="1.8"></path><path d="M-3 3 L-3 -8 L8 -1" fill="none" stroke="#4f7fae" stroke-width="1.8" stroke-linecap="round"></path></g>
 <text fill="#6b8fb2" font-size="14" x="104" y="154">Coco Grove</text>
 <text fill="#638fbf" font-size="14" x="765" y="166">Siquijor Port</text>
 <text fill="#8090a5" font-size="14" x="330" y="67">沙滩 · 泳池 · 午餐</text>
@@ -1212,7 +1296,6 @@ body.night .day-map{background:#111a26}
   </div>
 </div>
 <script>
-  
 const EVENTS = [
   { at:"2026-10-03T07:30:00+08:00", title:"OceanJet · Tagbilaran → Siquijor", note:"暂按往年时段 · 待正式班次确认" },
   { at:"2026-10-03T09:30:00+08:00", title:"抵达 Siquijor Port · Coco Grove 接送", note:"酒店接送 → 寄存行李 → 租摩托" },
@@ -1274,6 +1357,8 @@ function updateMode(){
   const night = h < 6 || h >= 18;
   document.body.classList.toggle("night",night);
   document.getElementById("modeText").textContent = night ? "菲律宾当地夜间" : "菲律宾当地白天";
+  const themeMeta = document.querySelector('meta[name="theme-color"]');
+  if(themeMeta) themeMeta.setAttribute("content", night ? "#07111d" : "#eef5fa");
 }
 setInterval(updateMode,60000);
 updateMode();
